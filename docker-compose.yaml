@@ -1,0 +1,24 @@
+services:
+
+  cooking:
+    build:
+      context: .
+      dockerfile: ./apps/cooking/Dockerfile
+      target: development
+    command: npm run start:dev cooking
+    env_file:
+      - ./apps/cooking/.env
+    volumes: 
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3000:3000'
+
+  # db:
+  #   image: postgres
+  #   restart: always
+  #   environment:
+  #     POSTGRES_PASSWORD: example
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+ 
