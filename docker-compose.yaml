@@ -1,5 +1,4 @@
 services:
-
   cooking:
     build:
       context: .
@@ -13,6 +12,22 @@ services:
       - /usr/src/app/node_modules
     ports:
       - '3000:3000'
+
+  user-interaction:
+    build:
+      context: .
+      dockerfile: ./apps/user-interaction/Dockerfile
+      target: development
+    command: npm run start:dev user-interaction
+    env_file:
+      - ./apps/user-interaction/.env
+    volumes: 
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports: 
+      - '5672:5672'
 
   # db:
   #   image: postgres
