@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CookingController } from './cooking.controller';
 import { CookingService } from './cooking.service';
+import { RabbitmqModule } from '@app/common';
+import { USER_INTERACTION_SERVICE } from './constants/services';
 
 @Module({
   imports: [
@@ -9,9 +11,9 @@ import { CookingService } from './cooking.service';
       isGlobal: true,
       envFilePath: './apps/cooking/.env',
     }),
-    // RmqModule.register({
-    //   name: BILLING_SERVICE,
-    // }),
+    RabbitmqModule.register({
+      name: USER_INTERACTION_SERVICE,
+    }),
     // AuthModule,
   ],
   controllers: [CookingController],

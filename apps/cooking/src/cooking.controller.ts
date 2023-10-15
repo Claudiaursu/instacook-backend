@@ -6,7 +6,7 @@ export class CookingController {
   constructor(private readonly cookingService: CookingService) {}
 
   @Get()
-  getHello(): string {
+  getHello() {
     return this.cookingService.getHello();
   }
 }
