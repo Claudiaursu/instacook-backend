@@ -1,8 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { UserInteractionModule } from './user-interaction.module';
 import { RabbitmqService } from '@app/common';
+import * as dotenv from 'dotenv';
 import { ConfigService } from '@nestjs/config';
 
+dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(UserInteractionModule);

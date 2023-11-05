@@ -8,7 +8,13 @@ import { DatabaseModule } from '@app/common/database/database.module';
 
 @Module({
   imports: [
-    DatabaseModule,
+    DatabaseModule.register({
+      host: process.env.PG_HOST,
+      port: parseInt(process.env.PG_PORT),
+      database: process.env.PG_DATABASE,
+      username: process.env.PG_USERNAME,
+      password: process.env.PG_PASSWORD
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: './apps/cooking/.env',
