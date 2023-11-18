@@ -8,19 +8,19 @@ import { UserEntity } from '../entities/user.entity';
 export class UserService extends TypeOrmBaseService<UserEntity> {
   constructor(
     @InjectRepository(UserEntity)
-    protected readonly topicRepo: Repository<UserEntity>,
+    protected readonly userRepo: Repository<UserEntity>,
   ) {
     super();
   }
 
   getAllUsers = async (): Promise<UserEntity[]> => {
     console.log("a intrat aici")
-    const topics = await this.topicRepo.find({
+    const users = await this.userRepo.find({
       order: {
         nume: 'ASC'
       },
     });
-    return Promise.resolve(topics);
+    return Promise.resolve(users);
   };
 
 //   getTopicById = async (topicId: string): Promise<TopicEntity> => {
@@ -41,27 +41,24 @@ export class UserService extends TypeOrmBaseService<UserEntity> {
 //     }
 //   };
 
-//   createTopic = async (topic: TopicEntity): Promise<TopicEntity> => {
-//     const score = topic?.popularityScore?.toString() || '0.0'
-//     topic.popularityScore = parseFloat(score)
+  createUser = async (user: UserEntity): Promise<UserEntity> => {
+    const score = user?.totalPuncte?.toString() || '0'
+    user.totalPuncte = parseFloat(score)
 
-//     if(topic?.topicImage === ''){
-//       topic.topicImage = "../../../assets/png/topic-images/default-topic.png"
-//     }
-//     const topicObject = this.topicRepo.create(topic);
+    const userObject = this.userRepo.create(user);
     
-//     try {
-//       await this.topicRepo.insert(topicObject);
-//       if(topic.owners && topic.owners.length > 0){
-//         topic.owners.forEach(async (owner) =>{
-//           await getConnection().createQueryBuilder().relation(TopicEntity, "owners").of(topicObject).add(owner)
-//         })
-//       }
-//       return topicObject;
-//     } catch (error) {
-//       logger.throw('01FWXN3P7J082NNXV8DXMZQATV', `Could not create new topic: ${JSON.stringify(error)}`, {error});
-//     } 
-//   };
+    try {
+      await this.userRepo.insert(userObject);
+      // if(user.owners && topic.owners.length > 0){
+      //   topic.owners.forEach(async (owner) =>{
+      //     await getConnection().createQueryBuilder().relation(TopicEntity, "owners").of(topicObject).add(owner)
+      //   })
+      // }
+      return userObject;
+    } catch (error) {
+      //logger.throw('01FWXN3P7J082NNXV8DXMZQATV', `Could not create new topic: ${JSON.stringify(error)}`, {error});
+    } 
+  };
 
 //   upsertTopic = async (topic: TopicEntity): Promise<TopicEntity> => {
 //     const newObject: TopicEntity = topic;

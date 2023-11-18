@@ -10,6 +10,7 @@ import { diskStorage, Multer } from 'multer';
 import { createWriteStream, fstatSync } from 'fs';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { UserService } from './user.service';
+import { plainToClass } from 'class-transformer';
 
 @ApiTags('Users')
 @Controller('v1/users')
@@ -53,31 +54,30 @@ export class UserController {
 //     }
 //   }
 
-//   // Create a new topic
-//   @Post('')
-//   //@Permissions('fast:read')
-//   @ApiBody({
-//     schema: {
-//       type: 'object',
-//       example: {
-//         topicName: 'Puppet Basics',
-//         popularityScore: 7.6,
-//         topicDescription: 'The goal is to understand how puppet works.'
-//       },
-//     },
-//   })
-//   @ApiOperation({ summary: 'Create a new topic' })
-//   async createTopic(@Body() topic: TopicEntity, @Res() res: Response) {
-//     try {
-//       const topicClass = plainToClass(TopicEntity, topic);
-//       const createdObject = await this.topicService.createTopic(topicClass);
-//       res = res.json(createdObject);
-//       return res;
-//     } catch (error) {
-//       res.status(500).send(`Could not create new topic: ${error}`);
-//       logger.throw("01FWY1DCZNHZNJ7Z114PPC1D4T", `Could not create topic`, {error})
-//     }
-//   }
+ // Create a new user
+  @Post('')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      example: {
+        topicName: 'Puppet Basics',
+        popularityScore: 7.6,
+        topicDescription: 'The goal is to understand how puppet works.'
+      },
+    },
+  })
+  @ApiOperation({ summary: 'Create a new user' })
+  async createUser(@Body() user: UserEntity, @Res() res: Response) {
+    try {
+      const userClass = plainToClass(UserEntity, user);
+      const createdObject = await this.userService.createUser(userClass);
+      res = res.json(createdObject);
+      return res;
+    } catch (error) {
+      res.status(500).send(`Could not create new user: ${error}`);
+      //logger.throw("01FWY1DCZNHZNJ7Z114PPC1D4T", `Could not create topic`, {error})
+    }
+  }
 
 //   @Post('/upload')
 //   @UseInterceptors(FileInterceptor('file', {
