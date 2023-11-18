@@ -3,7 +3,6 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Res, UploadedFile, U
 import { Response } from 'express';
 import { DeleteResult, EntityManager, getManager } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
-//import { logger } from '../../shared/util/logger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { diskStorage, Multer } from 'multer';
@@ -22,7 +21,6 @@ export class UserController {
     ) { }
 
   @Get('')
-  //@Permissions('fast:read')
   @ApiOperation({ summary: 'Get all users' })
   async findAllUsers(): Promise<UserEntity[]> {
     try {
