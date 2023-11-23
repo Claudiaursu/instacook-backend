@@ -1,6 +1,7 @@
 import { CommonEntity } from '@app/common/database/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, DeleteDateColumn, Entity } from 'typeorm';
+import { UserEntity } from 'apps/user-interaction/src/entities/user.entity';
+import { Column, DeleteDateColumn, Entity, ManyToOne } from 'typeorm';
 
 @Entity({ schema: 'public', name: 'colectie' })
 export class CollectionEntity extends CommonEntity {
@@ -11,31 +12,31 @@ export class CollectionEntity extends CommonEntity {
 
   @Column({ type: 'text', nullable: true })
   @ApiProperty({
-    example: 'Puppet Basics',
-    description: 'Topic Name',
+    example: 'America Express foods',
+    description: 'Collection title',
   })
-  topicName?: string;
+  titluColectie?: string;
 
-  @Column({ type: 'float', nullable: true, default: 0.0 })
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({
-    example: 7.8,
-    description: 'Popularity Score',
+    example: 'America Express foods',
+    description: 'Collection description',
   })
-  popularityScore?: number;
+  descriereColectie?: string;
+
+  @Column({ type: 'boolean', nullable: true, default: false })
+  @ApiProperty({
+    example: true,
+    description: 'Public',
+  })
+  publica?: boolean;
 
   @Column({ type: 'text', nullable: true })
   @ApiProperty({
     example: '',
-    description: 'Topic description',
+    description: 'photo path',
   })
-  topicDescription?: string;
-
-  @Column({ type: 'text', nullable: true })
-  @ApiProperty({
-    example: '../../../assets/png/topic-images/default-topic.png',
-    description: 'Topic Image path',
-  })
-  topicImage?: string;
+  calePoza?: string;
 
   @DeleteDateColumn({
     type: 'timestamptz',
@@ -46,4 +47,13 @@ export class CollectionEntity extends CommonEntity {
     description: 'Deleted At time',
   })
   deletedAt?: Date;
+
+  @ManyToOne(() => UserEntity, (user) => user.colectii)
+  @ApiProperty({
+    example: {
+      id: 1,
+    },
+    description: 'Topic ID',
+  })
+  utilizator?: UserEntity;
 }

@@ -1,6 +1,7 @@
 import { CommonEntity } from '@app/common/database/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, DeleteDateColumn, Entity } from 'typeorm';
+import { CollectionEntity } from 'apps/cooking/src/entities/collection.entity';
+import { Column, DeleteDateColumn, Entity, OneToMany } from 'typeorm';
 
 @Entity({ schema: 'public', name: 'utilizator' })
 export class UserEntity extends CommonEntity {
@@ -60,4 +61,15 @@ export class UserEntity extends CommonEntity {
     description: 'Deleted At time',
   })
   deletedAt?: Date;
+
+  @OneToMany(() => CollectionEntity, (collection) => collection.utilizator, {
+    cascade: true,
+  })
+  @ApiProperty({
+    example: {
+      id: 1,
+    },
+    description: 'Collections',
+  })
+  colectii?: CollectionEntity[];
 }

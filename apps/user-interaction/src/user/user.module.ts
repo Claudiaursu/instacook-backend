@@ -4,12 +4,14 @@ import { HttpModule } from '@nestjs/axios';
 import { UserEntity } from '../entities/user.entity';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
+import { CollectionEntity } from 'apps/cooking/src/entities/collection.entity';
 
 @Module({
   imports: [
     HttpModule,
     TypeOrmModule.forFeature([
-     UserEntity
+     UserEntity,
+     CollectionEntity
     ]),
   ],
   providers: [UserService],

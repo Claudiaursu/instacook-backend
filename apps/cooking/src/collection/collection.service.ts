@@ -2,59 +2,62 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { TypeOrmBaseService } from '../../../../libs/common/src/database/typeorm-base.service';
-import { UserEntity } from '../entities/user.entity';
+import { CollectionEntity } from '../entities/collection.entity';
 
 @Injectable()
-export class UserService extends TypeOrmBaseService<UserEntity> {
+export class CollectionService extends TypeOrmBaseService<CollectionEntity> {
   constructor(
-    @InjectRepository(UserEntity)
-    protected readonly userRepo: Repository<UserEntity>,
+    @InjectRepository(CollectionEntity)
+    protected readonly collectionRepo: Repository<CollectionEntity>,
   ) {
     super();
   }
 
-  getAllUsers = async (): Promise<UserEntity[]> => {
+  getAllCollections = async (): Promise<CollectionEntity[]> => {
     console.log("a intrat aici")
-    const users = await this.userRepo.find({
+    const collections = await this.collectionRepo.find({
       order: {
-        nume: 'ASC'
+        titluColectie: 'ASC'
       },
     });
-    return Promise.resolve(users);
+    return Promise.resolve(collections);
   };
 
-  getUserById = async (userId: string): Promise<UserEntity> => {
+  getCollectionById = async (collectionId: string): Promise<CollectionEntity> => {
     try{
-      const user = await this.userRepo.findOne({
+      const collection = await this.collectionRepo.findOne({
         where: {
-          id:parseInt(userId),
+          id: parseInt(collectionId),
           deletedAt: null
         },
         // relations:[
         //   'owners'
         // ]
       });
-      return user;
+      return collection;
       
     }catch(error){
       //logger.throw("01FWXN2K70FQSZFHXXNAZZTRXA", `Could not find topic with id ${topicId}`, {error})
     }
   };
 
-  createUser = async (user: UserEntity): Promise<UserEntity> => {
-    const score = user?.totalPuncte?.toString() || '0'
-    user.totalPuncte = parseFloat(score)
+  createCollection = async (collection: CollectionEntity): Promise<CollectionEntity> => {
+    const calePoza = collection?.calePoza ?? "";
+    collection.calePoza = calePoza;
 
-    const userObject = this.userRepo.create(user);
+    const publica = collection?.publica ?? false;
+    collection.publica = publica;
+
+    const collectionObject = this.collectionRepo.create(collection);
     
     try {
-      await this.userRepo.insert(userObject);
+      await this.collectionRepo.insert(collectionObject);
       // if(user.owners && topic.owners.length > 0){
       //   topic.owners.forEach(async (owner) =>{
       //     await getConnection().createQueryBuilder().relation(TopicEntity, "owners").of(topicObject).add(owner)
       //   })
       // }
-      return userObject;
+      return collectionObject;
     } catch (error) {
       //logger.throw('01FWXN3P7J082NNXV8DXMZQATV', `Could not create new topic: ${JSON.stringify(error)}`, {error});
     } 
@@ -143,9 +146,9 @@ export class UserService extends TypeOrmBaseService<UserEntity> {
 //   }
 
 
-  deleteUser = async (userId: number): Promise<DeleteResult> => {
+  deleteCollection = async (collectionId: number): Promise<DeleteResult> => {
     try {
-      const deleteResult = await this.userRepo.delete(userId);
+      const deleteResult = await this.collectionRepo.delete(collectionId);
       return deleteResult;
     } catch (error) {
       //logger.throw('01FWXN81MKVHFPHWAJJFE8VPFR', `Could not delete topic: ${JSON.stringify(error)}`);

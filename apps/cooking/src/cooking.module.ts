@@ -5,24 +5,19 @@ import { CookingService } from './cooking.service';
 import { RabbitmqModule } from '@app/common';
 import { USER_INTERACTION_SERVICE } from './constants/services';
 import { DatabaseModule } from '@app/common/database/database.module';
+import { CollectionModule } from './collection/collection.module';
 
 @Module({
   imports: [
-    DatabaseModule.register({
-      host: process.env.PG_HOST,
-      port: parseInt(process.env.PG_PORT),
-      database: process.env.PG_DATABASE,
-      username: process.env.PG_USERNAME,
-      password: process.env.PG_PASSWORD
-    }),
+    DatabaseModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: './apps/cooking/.env',
     }),
     RabbitmqModule.register({
       name: USER_INTERACTION_SERVICE,
     }),
     // AuthModule,
+    CollectionModule
   ],
   controllers: [CookingController],
   providers: [CookingService],

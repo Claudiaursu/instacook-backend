@@ -2,56 +2,56 @@ import { ApiBody, ApiOAuth2, ApiTags, ApiParam, ApiOperation, ApiConsumes} from 
 import { Body, Controller, Delete, Get, Param, Patch, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { Response } from 'express';
 import { DeleteResult, EntityManager, getManager } from 'typeorm';
-import { UserEntity } from '../entities/user.entity';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { Express } from 'express';
-import { diskStorage, Multer } from 'multer';
-import { createWriteStream, fstatSync } from 'fs';
 import { InjectEntityManager } from '@nestjs/typeorm';
-import { UserService } from './user.service';
 import { plainToClass } from 'class-transformer';
+import { CollectionService } from './collection.service';
+import { CollectionEntity } from '../entities/collection.entity';
+import { logger } from '@app/common/logger';
 
-@ApiTags('Users')
-@Controller('v1/users')
-export class UserController {
+@ApiTags('Collection')
+@Controller('v1/collections')
+export class CollectionController {
   constructor(
-    private readonly userService: UserService,
+    private readonly collectionService: CollectionService,
     @InjectEntityManager('default')
     private entityManager: EntityManager,
     ) { }
 
   @Get('')
-  @ApiOperation({ summary: 'Get all users' })
-  async findAllUsers(): Promise<UserEntity[]> {
+  @ApiOperation({ summary: 'Get all collections' })
+  async findAllCollections(): Promise<CollectionEntity[]> {
     try {
-      const allUsers = await this.userService.getAllUsers();
-      return allUsers;
+      const allCollections = await this.collectionService.getAllCollections();
+      return allCollections;
+
     } catch (error) {
-        return error;
-      //logger.throw("01FWXNBDFSFMM8E47DCYY010ZF", `Could not find all topics`, {error})
+      logger.throw("01FWXNBDFSFMM8E47DCYY010ZF", `Could not find all topics`, {error})
+      return error;
     }
   }
 
   // Get a user by id 
-  @Get('/:userId')
+  @Get('/:collectionId')
   @ApiParam({
-    name: 'userId',
+    name: 'collectionId',
     type: 'string',
     schema: {
       example: '1',
     },
   })
-  @ApiOperation({ summary: 'Get an user by its id' })
-  async findUser(@Param('userId') userId: string): Promise<UserEntity | null> {
+  @ApiOperation({ summary: 'Get a collection by its id' })
+  async findCollection(@Param('collectionId') collectionId: string): Promise<CollectionEntity | null> {
     try {
-      const user = await this.userService.getUserById(userId);
-      return user;
+      const collection = await this.collectionService.getCollectionById(collectionId);
+      return collection;
+
     } catch (error) {
-      //logger.throw("01FWY1EFYT4S0XXXT3S31459PG", `Could not find topic with id ${topicId}`)
+      logger.throw("01FWY1EFYT4S0XXXT3S31459PG", `Could not find topic with id ${collectionId}`)
+      return error;
     }
   }
 
- // Create a new user
+ // Create a new collection
   @Post('')
   @ApiBody({
     schema: {
@@ -63,16 +63,17 @@ export class UserController {
       },
     },
   })
-  @ApiOperation({ summary: 'Create a new user' })
-  async createUser(@Body() user: UserEntity, @Res() res: Response) {
+  @ApiOperation({ summary: 'Create a new collection' })
+  async createCollection(@Body() collection: CollectionEntity, @Res() res: Response) {
     try {
-      const userClass = plainToClass(UserEntity, user);
-      const createdObject = await this.userService.createUser(userClass);
+      const collectionClass = plainToClass(CollectionEntity, collection);
+      const createdObject = await this.collectionService.createCollection(collectionClass);
       res = res.json(createdObject);
       return res;
+
     } catch (error) {
-      res.status(500).send(`Could not create new user: ${error}`);
-      //logger.throw("01FWY1DCZNHZNJ7Z114PPC1D4T", `Could not create topic`, {error})
+      res.status(500).send(`Could not create new collection: ${error}`);
+      logger.throw("01FWY1DCZNHZNJ7Z114PPC1D4T", `Could not create collection`, {error})
     }
   }
 
@@ -160,9 +161,9 @@ export class UserController {
 //     }
 //   }
 
-  // Delete an user by id
-  @Delete(':userId')
-  @ApiOperation({ summary: 'Deletes an user by id' })
+  // Delete a collection by id
+  @Delete('/:collectionId')
+  @ApiOperation({ summary: 'Deletes a collection by id' })
   @ApiParam({
     name: 'userId',
     type: 'number',
@@ -170,12 +171,12 @@ export class UserController {
       default: 1,
     },
   })
-  async deleteUser(@Param('userId') userId: number): Promise<DeleteResult> {
+  async deleteUser(@Param('collectionId') collectionId: number): Promise<DeleteResult> {
     try {
-      const deleteResult = await this.userService.deleteUser(userId);
+      const deleteResult = await this.collectionService.deleteCollection(collectionId);
       return deleteResult;
     } catch (error) {
-      //logger.throw("01FWY4F1RYZ8BS4N6C65V0RHHH", `Could not delete topic with id ${topicId}`, {error})
+      logger.throw("01FWY4F1RYZ8BS4N6C65V0RHHH", `Could not delete collection with id ${collectionId}`, {error})
     }
   }
 
