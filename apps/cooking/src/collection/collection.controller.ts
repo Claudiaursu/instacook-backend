@@ -1,4 +1,4 @@
-import { ApiBody, ApiOAuth2, ApiTags, ApiParam, ApiOperation, ApiConsumes} from '@nestjs/swagger';
+import { ApiBody, ApiOAuth2, ApiTags, ApiParam, ApiOperation, ApiConsumes } from '@nestjs/swagger';
 import { Body, Controller, Delete, Get, Param, Patch, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { Response } from 'express';
 import { DeleteResult, EntityManager, getManager } from 'typeorm';
@@ -15,7 +15,7 @@ export class CollectionController {
     private readonly collectionService: CollectionService,
     @InjectEntityManager('default')
     private entityManager: EntityManager,
-    ) { }
+  ) { }
 
   @Get('')
   @ApiOperation({ summary: 'Get all collections' })
@@ -25,12 +25,24 @@ export class CollectionController {
       return allCollections;
 
     } catch (error) {
-      logger.throw("01FWXNBDFSFMM8E47DCYY010ZF", `Could not find all topics`, {error})
+      logger.throw("01FWXNBDFSFMM8E47DCYY010ZF", `Could not find all topics`, { error })
       return error;
     }
   }
 
-  // Get a user by id 
+  @Get('')
+  @ApiOperation({ summary: 'Get all collections for a user' })
+  async findCollectionsForUser(@Param('userId') userId: string): Promise<CollectionEntity[]> {
+    try {
+      const allCollections = await this.collectionService.getCollectionsForUser(userId);
+      return allCollections;
+
+    } catch (error) {
+      logger.throw("01FWXNBDFSFMM8E47DCYY010ZF", `Could not find all users`, { error })
+      return error;
+    }
+  }
+
   @Get('/:collectionId')
   @ApiParam({
     name: 'collectionId',
@@ -51,7 +63,6 @@ export class CollectionController {
     }
   }
 
- // Create a new collection
   @Post('')
   @ApiBody({
     schema: {
@@ -73,95 +84,94 @@ export class CollectionController {
 
     } catch (error) {
       res.status(500).send(`Could not create new collection: ${error}`);
-      logger.throw("01FWY1DCZNHZNJ7Z114PPC1D4T", `Could not create collection`, {error})
+      logger.throw("01FWY1DCZNHZNJ7Z114PPC1D4T", `Could not create collection`, { error })
     }
   }
 
-//   @Post('/upload')
-//   @UseInterceptors(FileInterceptor('file', {
-//     storage: diskStorage({
-//       destination: 'apps/portal/src/assets/png/topic-images',
-//       filename: (req, file, cb) => {
-//         cb(null, `${file.originalname}`)
-//       }
-//     }) 
-//   }))
-//   @ApiConsumes('multipart/form-data')
-//   @ApiBody({
-//     schema: {
-//       type: 'object',
-//       properties: {
-//         file: { 
-//           type: 'string',
-//           format: 'binary',
-//         },
-//       },
-//     },
-//   })
-//   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-//     return {
-//       path: file.path
-//     };
-//   }
+  //   @Post('/upload')
+  //   @UseInterceptors(FileInterceptor('file', {
+  //     storage: diskStorage({
+  //       destination: 'apps/portal/src/assets/png/topic-images',
+  //       filename: (req, file, cb) => {
+  //         cb(null, `${file.originalname}`)
+  //       }
+  //     }) 
+  //   }))
+  //   @ApiConsumes('multipart/form-data')
+  //   @ApiBody({
+  //     schema: {
+  //       type: 'object',
+  //       properties: {
+  //         file: { 
+  //           type: 'string',
+  //           format: 'binary',
+  //         },
+  //       },
+  //     },
+  //   })
+  //   async uploadFile(@UploadedFile() file: Express.Multer.File) {
+  //     return {
+  //       path: file.path
+  //     };
+  //   }
 
-//   // Upsert a topic
-//   @Patch('')
-//   //@Permissions('fast:read')
-//   @ApiOperation({ summary: 'Update/Create a topic' })
-//   @ApiBody({
-//     schema: {
-//       type: 'object',
-//       example: {
-//         topicName: 'Puppet Basics',
-//         popularityScore: 7.6,
-//         topicDescription: 'The goal is to understand how puppet works.'
-//       },
-//     },
-//   })
-//   async upsertTopic(@Body() topic: TopicEntity, @Res() res: Response) {
-//     try {
-//       const topicClass = plainToClass(TopicEntity, topic);
-//       const createdObject = await this.topicService.upsertTopic(topicClass);
-//       res = res.json(createdObject);
-//       return res;
-//     } catch (error) {
-//       res.status(500).send(`Could not update topic: ${error}`);
-//       logger.throw("01FWY1DVD9QCNHJ7RSX9Y5FX9V", `Could not update topic`, {error})
-//     }
-//   }
+  //   // Upsert a topic
+  //   @Patch('')
+  //   //@Permissions('fast:read')
+  //   @ApiOperation({ summary: 'Update/Create a topic' })
+  //   @ApiBody({
+  //     schema: {
+  //       type: 'object',
+  //       example: {
+  //         topicName: 'Puppet Basics',
+  //         popularityScore: 7.6,
+  //         topicDescription: 'The goal is to understand how puppet works.'
+  //       },
+  //     },
+  //   })
+  //   async upsertTopic(@Body() topic: TopicEntity, @Res() res: Response) {
+  //     try {
+  //       const topicClass = plainToClass(TopicEntity, topic);
+  //       const createdObject = await this.topicService.upsertTopic(topicClass);
+  //       res = res.json(createdObject);
+  //       return res;
+  //     } catch (error) {
+  //       res.status(500).send(`Could not update topic: ${error}`);
+  //       logger.throw("01FWY1DVD9QCNHJ7RSX9Y5FX9V", `Could not update topic`, {error})
+  //     }
+  //   }
 
-//   @Patch(':topicId')
-//   //@Permissions('fast:read')
-//   @ApiOperation({ summary: 'Update a topic' })
-//   @ApiParam({
-//     name: 'topicId',
-//     type: 'number',
-//     schema: {
-//       default: 1,
-//     },
-//   })
-//   @ApiBody({
-//     schema: {
-//       type: 'object',
-//       example: {
-//         topicName: 'Puppet Basics',
-//         popularityScore: 7.6,
-//         topicDescription: 'The goal is to understand how puppet works.'
-//       }
-//     },
-//   })
-//   async updateTopic(@Body() topic: TopicEntity, @Param('topicId') topicId: string, @Res() res: Response) {
-//     try {
-//       const topicClass = plainToClass(TopicEntity, topic);
-//       const createdObject = await this.topicService.updateTopic(topicId, topicClass);
-//       res = res.json(createdObject);
-//       return res;
-//     } catch (error) {
-//       logger.throw("01G40QBR1WV89Z4NDEERRQYED7", `Could not update topic with id ${topicId}`, {error})
-//     }
-//   }
+  @Patch(':collectionId')
+  @ApiOperation({ summary: 'Update a collection' })
+  @ApiParam({
+    name: 'collectionId',
+    type: 'number',
+    schema: {
+      default: 1,
+    },
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      example: {
+        topicName: 'Puppet Basics',
+        popularityScore: 7.6,
+        topicDescription: 'The goal is to understand how puppet works.'
+      }
+    },
+  })
+  async updateCollection(@Body() collection: CollectionEntity, @Param('collectionId') collectionId: string, @Res() res: Response) {
+    try {
+      const collectionClass = plainToClass(CollectionEntity, collection);
+      const createdObject = await this.collectionService.updateCollection(collectionId, collectionClass);
+      res = res.json(createdObject);
+      return res;
 
-  // Delete a collection by id
+    } catch (error) {
+      logger.throw("01G40QBR1WV89Z4NDEERRQYED7", `Could not update collection with id ${collectionId}`, { error })
+    }
+  }
+
   @Delete('/:collectionId')
   @ApiOperation({ summary: 'Deletes a collection by id' })
   @ApiParam({
@@ -176,23 +186,23 @@ export class CollectionController {
       const deleteResult = await this.collectionService.deleteCollection(collectionId);
       return deleteResult;
     } catch (error) {
-      logger.throw("01FWY4F1RYZ8BS4N6C65V0RHHH", `Could not delete collection with id ${collectionId}`, {error})
+      logger.throw("01FWY4F1RYZ8BS4N6C65V0RHHH", `Could not delete collection with id ${collectionId}`, { error })
     }
   }
 
-//   // Get all topics
-//   @Get('topicsView/all')
-//   //@Permissions('fast:read')
-//   @ApiOperation({ summary: 'Get all topics' })
-//   async findAllTopicsFromView(): Promise<TopicViewEntity[]> {
-//     try {
-//       const entityManager = getManager();
-//       const topics = await entityManager.query('select * from itacademy.topics_view')    
-//       return topics;
-//     } catch (error) {
-//       logger.throw("01G3W1GGPXQVD6FK8KCY8M7JP3", `Could not find all topics`, {error})
-//     }
+  //   // Get all topics
+  //   @Get('topicsView/all')
+  //   //@Permissions('fast:read')
+  //   @ApiOperation({ summary: 'Get all topics' })
+  //   async findAllTopicsFromView(): Promise<TopicViewEntity[]> {
+  //     try {
+  //       const entityManager = getManager();
+  //       const topics = await entityManager.query('select * from itacademy.topics_view')    
+  //       return topics;
+  //     } catch (error) {
+  //       logger.throw("01G3W1GGPXQVD6FK8KCY8M7JP3", `Could not find all topics`, {error})
+  //     }
 
-//   }
+  //   }
 
 }

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { TypeOrmBaseService } from '../../../../libs/common/src/database/typeorm-base.service';
 import { CollectionEntity } from '../entities/collection.entity';
+import { logger } from '@app/common/logger';
 
 @Injectable()
 export class CollectionService extends TypeOrmBaseService<CollectionEntity> {
@@ -14,10 +15,22 @@ export class CollectionService extends TypeOrmBaseService<CollectionEntity> {
   }
 
   getAllCollections = async (): Promise<CollectionEntity[]> => {
-    console.log("a intrat aici")
     const collections = await this.collectionRepo.find({
       order: {
         titluColectie: 'ASC'
+      },
+    });
+    return Promise.resolve(collections);
+  };
+
+  getCollectionsForUser = async (userId: string): Promise<CollectionEntity[]> => {
+    const userID = parseInt(userId);
+
+    const collections = await this.collectionRepo.find({
+      where: {
+        utilizator: {
+          id: userID
+        }
       },
     });
     return Promise.resolve(collections);
@@ -94,64 +107,32 @@ export class CollectionService extends TypeOrmBaseService<CollectionEntity> {
 //     }
 //   };
 
-//   updateTopic = async (topicId: string, topic: TopicEntity): Promise<any> => {
-//     const existingObject = await this.topicRepo.findOne({
-//       where: {
-//         id: topicId
-//       },
-//       relations:['owners']
-//     });
-//     try{
-//       if(existingObject){
-//         let existingOwnerIds = existingObject.owners.map(owner =>{
-//           return owner.id
-//         })
-//         if(topic.owners && topic.owners.length > 0){
-//           const desiredOwners = topic.owners.map(owner => owner.id)
-//           desiredOwners.forEach(async ownerToBe => {
-//             if(existingOwnerIds.includes(ownerToBe)){
-//               existingOwnerIds = existingOwnerIds.filter(element =>{
-//                 if(element !== ownerToBe){
-//                   return element
-//                 }
-//               })
-//             }else{
-//               await getConnection().createQueryBuilder().relation(TopicEntity, "owners").of(existingObject).add(ownerToBe)
-//             }
-//           })
+  updateCollection = async (collectionId: string, collection: CollectionEntity): Promise<any> => {
+    const existingObject = await this.collectionRepo.findOne({
+      where: {
+        id: parseInt(collectionId)
+      }
+    });
 
-//           if(existingOwnerIds.length > 0){
-//             existingOwnerIds.forEach(async ownerToRemove =>{
-//               await getConnection().createQueryBuilder().relation(TopicEntity, "owners").of(existingObject).remove(ownerToRemove)
-//             })
-//           }
-//         }
-//         else{
-//           const existingOwnerIds = existingObject.owners.map(owner =>{
-//             return owner.id
-//           })
-//           existingOwnerIds.forEach(async ownerToRemove =>{
-//             await getConnection().createQueryBuilder().relation(TopicEntity, "owners").of(existingObject).remove(ownerToRemove)
-//           })
-//         }
+    try {
+      if (existingObject) {
+        const updatedResult = await this.collectionRepo.update(parseInt(collectionId), collection);
+        return updatedResult;
+      }
 
-//         delete topic.owners
-//         const updatedResult = await this.topicRepo.update(parseInt(topicId), topic);
-//         return updatedResult;
-//       }
-//     }
-//     catch(error){
-//       logger.throw("01G40Q6HNBBQYGG0JCRN7N2P59", `Could not find any topic with id ${topicId}`);
-//     }
-//   }
+    } catch(error) {
+      logger.throw("01G40Q6HNBBQYGG0JCRN7N2P59", `Could not find any topic with id ${collectionId}`);
+    }
+  }
 
 
   deleteCollection = async (collectionId: number): Promise<DeleteResult> => {
     try {
       const deleteResult = await this.collectionRepo.delete(collectionId);
       return deleteResult;
+
     } catch (error) {
-      //logger.throw('01FWXN81MKVHFPHWAJJFE8VPFR', `Could not delete topic: ${JSON.stringify(error)}`);
+      logger.throw('01FWXN81MKVHFPHWAJJFE8VPFR', `Could not delete topic: ${JSON.stringify(error)}`);
     }
   };
 }
