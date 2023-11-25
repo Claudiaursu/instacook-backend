@@ -65,14 +65,9 @@ export class CollectionService extends TypeOrmBaseService<CollectionEntity> {
     
     try {
       await this.collectionRepo.insert(collectionObject);
-      // if(user.owners && topic.owners.length > 0){
-      //   topic.owners.forEach(async (owner) =>{
-      //     await getConnection().createQueryBuilder().relation(TopicEntity, "owners").of(topicObject).add(owner)
-      //   })
-      // }
       return collectionObject;
     } catch (error) {
-      //logger.throw('01FWXN3P7J082NNXV8DXMZQATV', `Could not create new topic: ${JSON.stringify(error)}`, {error});
+      logger.throw('01FWXN3P7J082NNXV8DXMZQATV', `Could not create new topic: ${JSON.stringify(error)}`, {error});
     } 
   };
 

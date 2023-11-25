@@ -1,7 +1,8 @@
 import { CommonEntity } from '@app/common/database/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from 'apps/user-interaction/src/entities/user.entity';
-import { Column, DeleteDateColumn, Entity, ManyToOne } from 'typeorm';
+import { Column, DeleteDateColumn, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { RecipeEntity } from './recipe.entity';
 
 @Entity({ schema: 'public', name: 'colectie' })
 export class CollectionEntity extends CommonEntity {
@@ -56,4 +57,15 @@ export class CollectionEntity extends CommonEntity {
     description: 'Topic ID',
   })
   utilizator?: UserEntity;
+
+  @OneToMany(() => RecipeEntity, (recipe) => recipe.colectie, {
+    cascade: true,
+  })
+  @ApiProperty({
+    example: {
+      id: 1,
+    },
+    description: 'Recipes',
+  })
+  retete?: RecipeEntity[];
 }

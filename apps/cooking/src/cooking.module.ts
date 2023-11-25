@@ -6,6 +6,7 @@ import { RabbitmqModule } from '@app/common';
 import { USER_INTERACTION_SERVICE } from './constants/services';
 import { DatabaseModule } from '@app/common/database/database.module';
 import { CollectionModule } from './collection/collection.module';
+import { RecipeModule } from './recipe/recipe.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { CollectionModule } from './collection/collection.module';
       name: USER_INTERACTION_SERVICE,
     }),
     // AuthModule,
-    CollectionModule
+    CollectionModule,
+    RecipeModule
   ],
   controllers: [CookingController],
   providers: [CookingService],
