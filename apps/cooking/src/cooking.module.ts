@@ -7,6 +7,7 @@ import { USER_INTERACTION_SERVICE } from './constants/services';
 import { DatabaseModule } from '@app/common/database/database.module';
 import { CollectionModule } from './collection/collection.module';
 import { RecipeModule } from './recipe/recipe.module';
+import { CuisineModule } from './cuisine/cuisine.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { RecipeModule } from './recipe/recipe.module';
     }),
     // AuthModule,
     CollectionModule,
-    RecipeModule
+    RecipeModule,
+    CuisineModule
   ],
   controllers: [CookingController],
   providers: [CookingService],

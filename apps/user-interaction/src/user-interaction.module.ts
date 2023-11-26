@@ -5,6 +5,7 @@ import { RabbitmqModule } from '@app/common';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { DatabaseModule } from '@app/common/database/database.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [  
@@ -13,7 +14,8 @@ import { DatabaseModule } from '@app/common/database/database.module';
       isGlobal: true,
     }),
     RabbitmqModule,
-    UserModule
+    UserModule,
+    CommentModule
   ],
   controllers: [UserInteractionController],
   providers: [UserInteractionService],

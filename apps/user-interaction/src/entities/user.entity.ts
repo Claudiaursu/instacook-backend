@@ -2,6 +2,7 @@ import { CommonEntity } from '@app/common/database/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { CollectionEntity } from 'apps/cooking/src/entities/collection.entity';
 import { Column, DeleteDateColumn, Entity, OneToMany } from 'typeorm';
+import { CommentEntity } from './comment.entity';
 
 @Entity({ schema: 'public', name: 'utilizator' })
 export class UserEntity extends CommonEntity {
@@ -72,4 +73,15 @@ export class UserEntity extends CommonEntity {
     description: 'Collections',
   })
   colectii?: CollectionEntity[];
+
+  @OneToMany(() => CollectionEntity, (comment) => comment.utilizator, {
+    cascade: true,
+  })
+  @ApiProperty({
+    example: {
+      id: 1,
+    },
+    description: 'Comments',
+  })
+  comentarii?: CommentEntity[];
 }

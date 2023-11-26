@@ -1,8 +1,10 @@
 import { CommonEntity } from '@app/common/database/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from 'apps/user-interaction/src/entities/user.entity';
-import { Column, DeleteDateColumn, Entity, ManyToOne } from 'typeorm';
+import { Column, DeleteDateColumn, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { CollectionEntity } from './collection.entity';
+import { CuisineEntity } from './cuisine.entity';
+import { CommentEntity } from 'apps/user-interaction/src/entities/comment.entity';
 
 @Entity({ schema: 'public', name: 'reteta' })
 export class RecipeEntity extends CommonEntity {
@@ -78,4 +80,25 @@ export class RecipeEntity extends CommonEntity {
     description: 'Topic ID',
   })
   colectie?: CollectionEntity;
+
+  @ManyToOne(() => CuisineEntity, (cuisine) => cuisine.retete)
+  @ApiProperty({
+    example: {
+      id: 1,
+    },
+    description: 'Cuisine ID',
+  })
+  bucatarie?: CuisineEntity;
+
+  @OneToMany(() => CommentEntity, (comment) => comment.reteta, {
+    cascade: true,
+  })
+  @ApiProperty({
+    example: {
+      id: 1,
+    },
+    description: 'Comments',
+  })
+  comentarii?: CommentEntity[];
+
 }
