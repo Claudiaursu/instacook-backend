@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { DatabaseModule } from '@app/common/database/database.module';
 import { CommentModule } from './comment/comment.module';
+import { CollectionModule } from 'apps/cooking/src/collection/collection.module';
+import { ContestModule } from 'apps/competitions/src/contest/contest.module';
 
 @Module({
   imports: [  
@@ -15,7 +17,8 @@ import { CommentModule } from './comment/comment.module';
     }),
     RabbitmqModule,
     UserModule,
-    CommentModule
+    CommentModule,
+    CollectionModule
   ],
   controllers: [UserInteractionController],
   providers: [UserInteractionService],

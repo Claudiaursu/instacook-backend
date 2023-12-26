@@ -8,6 +8,7 @@ import { DatabaseModule } from '@app/common/database/database.module';
 import { CollectionModule } from './collection/collection.module';
 import { RecipeModule } from './recipe/recipe.module';
 import { CuisineModule } from './cuisine/cuisine.module';
+import { ContestModule } from 'apps/competitions/src/contest/contest.module';
 
 @Module({
   imports: [
@@ -18,10 +19,10 @@ import { CuisineModule } from './cuisine/cuisine.module';
     RabbitmqModule.register({
       name: USER_INTERACTION_SERVICE,
     }),
-    // AuthModule,
     CollectionModule,
     RecipeModule,
-    CuisineModule
+    CuisineModule,
+    ContestModule
   ],
   controllers: [CookingController],
   providers: [CookingService],

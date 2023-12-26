@@ -4,6 +4,7 @@ import { UserEntity } from 'apps/user-interaction/src/entities/user.entity';
 import { Column, DeleteDateColumn, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { CollectionEntity } from './collection.entity';
 import { RecipeEntity } from './recipe.entity';
+import { CompetitionEntity } from 'apps/competitions/src/entities/competition.entity';
 
 @Entity({ schema: 'public', name: 'bucatarie' })
 export class CuisineEntity extends CommonEntity {
@@ -53,4 +54,15 @@ export class CuisineEntity extends CommonEntity {
     description: 'Recipes',
   })
   retete?: RecipeEntity[];
+
+  @OneToMany(() => CompetitionEntity, (competition) => competition.bucatarie, {
+    cascade: true,
+  })
+  @ApiProperty({
+    example: {
+      id: 1,
+    },
+    description: 'Competitions',
+  })
+  concursuri?: CompetitionEntity[];
 }

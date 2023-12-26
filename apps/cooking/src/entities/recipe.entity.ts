@@ -5,6 +5,7 @@ import { Column, DeleteDateColumn, Entity, ManyToOne, OneToMany } from 'typeorm'
 import { CollectionEntity } from './collection.entity';
 import { CuisineEntity } from './cuisine.entity';
 import { CommentEntity } from 'apps/user-interaction/src/entities/comment.entity';
+import { CompetitionEntity } from 'apps/competitions/src/entities/competition.entity';
 
 @Entity({ schema: 'public', name: 'reteta' })
 export class RecipeEntity extends CommonEntity {
@@ -101,4 +102,14 @@ export class RecipeEntity extends CommonEntity {
   })
   comentarii?: CommentEntity[];
 
+  @OneToMany(() => CompetitionEntity, (competition) => competition.retetaCastigatoare, {
+    cascade: true,
+  })
+  @ApiProperty({
+    example: {
+      id: 1,
+    },
+    description: 'Contests',
+  })
+  concursuriCastigate?: CompetitionEntity[];
 }

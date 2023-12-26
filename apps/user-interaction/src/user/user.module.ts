@@ -6,6 +6,7 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { CollectionEntity } from 'apps/cooking/src/entities/collection.entity';
 import { CommentEntity } from '../entities/comment.entity';
+import { CompetitionEntity } from 'apps/competitions/src/entities/competition.entity';
 
 @Module({
   imports: [

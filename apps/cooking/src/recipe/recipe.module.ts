@@ -8,6 +8,7 @@ import { UserEntity } from 'apps/user-interaction/src/entities/user.entity';
 import { RecipeEntity } from '../entities/recipe.entity';
 import { CommentEntity } from 'apps/user-interaction/src/entities/comment.entity';
 import { CuisineEntity } from '../entities/cuisine.entity';
+import { CompetitionEntity } from 'apps/competitions/src/entities/competition.entity';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { CuisineEntity } from '../entities/cuisine.entity';
      CollectionEntity,
      RecipeEntity,
      CommentEntity,
-     CuisineEntity
+     CuisineEntity,
+     CompetitionEntity
     ]),
   ],
   providers: [RecipeService],

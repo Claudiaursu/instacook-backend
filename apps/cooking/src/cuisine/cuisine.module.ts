@@ -6,6 +6,8 @@ import { RecipeEntity } from '../entities/recipe.entity';
 import { CuisineEntity } from '../entities/cuisine.entity';
 import { CuisineController } from './cuisine.controller';
 import { CuisineService } from './cuisine.service';
+import { ContestModule } from 'apps/competitions/src/contest/contest.module';
+import { CompetitionEntity } from 'apps/competitions/src/entities/competition.entity';
 
 @Module({
   imports: [
@@ -13,7 +15,8 @@ import { CuisineService } from './cuisine.service';
     TypeOrmModule.forFeature([
      CollectionEntity,
      RecipeEntity,
-     CuisineEntity
+     CuisineEntity,
+     CompetitionEntity
     ]),
   ],
   providers: [CuisineService],

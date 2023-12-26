@@ -6,6 +6,7 @@ import { CollectionService } from './collection.service';
 import { CollectionEntity } from '../entities/collection.entity';
 import { UserEntity } from 'apps/user-interaction/src/entities/user.entity';
 import { RecipeEntity } from '../entities/recipe.entity';
+import { CompetitionEntity } from 'apps/competitions/src/entities/competition.entity';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { RecipeEntity } from '../entities/recipe.entity';
     TypeOrmModule.forFeature([
      CollectionEntity,
      UserEntity,
-     RecipeEntity
+     RecipeEntity,
+     CompetitionEntity
     ]),
   ],
   providers: [CollectionService],

@@ -45,6 +45,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
+    },
+    "competitions": {
+      "type": "application",
+      "root": "apps/competitions",
+      "entryFile": "main",
+      "sourceRoot": "apps/competitions/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/competitions/tsconfig.app.json"
+      }
     }
   }
 }
