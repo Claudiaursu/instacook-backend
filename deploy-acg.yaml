@@ -1,0 +1,127 @@
+apiVersion: 2019-12-01
+location: eastus
+name: myContainerGroupCC
+properties:
+  containers:
+  - name: postgres
+    properties:
+      image: postgres:12
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 1.5
+      environmentVariables:
+        - name: PG_HOST
+          value: postgres
+        - name: PG_PORT
+          value: '5432'
+        - name: PG_DATABASE
+          value: instacook
+        - name: PG_USER
+          value: postgres
+        - name: PG_PASS
+          value: parolapostgres
+      volumeMounts:
+      - name: postgres-data
+        mountPath: /docker-entrypoint-initdb.d/init.sql 
+  - name: cooking
+    properties:
+      image: ursuclaudia/instacook-backend-cooking2
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 1.5
+      ports:
+      - port: 3333
+      environmentVariables:
+        - name: PG_HOST
+          value: postgres
+        - name: PG_PORT
+          value: '5432'
+        - name: PG_DATABASE
+          value: instacook
+        - name: PG_USER
+          value: postgres
+        - name: PG_PASS
+          value: parolapostgres
+      # volumeMounts:
+      # - name: cooking-data
+      #   mountPath: /usr/src/app/node_modules
+  - name: user-interaction
+    properties:
+      image: ursuclaudia/instacook-backend-user-interaction2
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 1.5
+      environmentVariables:
+        - name: PG_HOST
+          value: postgres
+        - name: PG_PORT
+          value: '5432'
+        - name: PG_DATABASE
+          value: instacook
+        - name: PG_USER
+          value: postgres
+        - name: PG_PASS
+          value: parolapostgres
+      ports:
+      - port: 9083
+      volumeMounts:
+      - name: user-interaction-data
+        mountPath: /usr/src/app/node_modules
+  - name: competitions
+    properties:
+      image: ursuclaudia/instacook-backend-competitions2
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 1.5
+      environmentVariables:
+        - name: PG_HOST
+          value: postgres
+        - name: PG_PORT
+          value: '5432'
+        - name: PG_DATABASE
+          value: instacook
+        - name: PG_USER
+          value: postgres
+        - name: PG_PASS
+          value: parolapostgres
+      ports:
+      - port: 9082
+      volumeMounts:
+      - name: competitions-data
+        mountPath: /usr/src/app/node_modules
+  osType: Linux
+  ipAddress:
+    type: Public
+    ports:
+    - protocol: tcp
+      port: 3333
+    - protocol: tcp
+      port: 9083
+    - protocol: tcp
+      port: 9082
+  volumes:
+  - name: postgres-data
+    azureFile:
+      sharename: myccprojectshare
+      storageAccountName: mystorageaccountcc1
+      storageAccountKey: B5mqD2LoBJFkTg0GjwZYiJYQ6G0qScQgF285ni9ZBFtBMOybVR2+EPrOUJq369h7aJcEf7yo5y9A+ASt+9KVEg==
+  - name: cooking-data
+    azureFile:
+      sharename: myccprojectshare
+      storageAccountName: mystorageaccountcc1
+      storageAccountKey: B5mqD2LoBJFkTg0GjwZYiJYQ6G0qScQgF285ni9ZBFtBMOybVR2+EPrOUJq369h7aJcEf7yo5y9A+ASt+9KVEg==
+  - name: user-interaction-data
+    azureFile:
+      sharename: myccprojectshare
+      storageAccountName: mystorageaccountcc1
+      storageAccountKey: B5mqD2LoBJFkTg0GjwZYiJYQ6G0qScQgF285ni9ZBFtBMOybVR2+EPrOUJq369h7aJcEf7yo5y9A+ASt+9KVEg==
+  - name: competitions-data
+    azureFile:
+      sharename: myccprojectshare
+      storageAccountName: mystorageaccountcc1
+      storageAccountKey: B5mqD2LoBJFkTg0GjwZYiJYQ6G0qScQgF285ni9ZBFtBMOybVR2+EPrOUJq369h7aJcEf7yo5y9A+ASt+9KVEg==
+type: Microsoft.ContainerInstance/containerGroups

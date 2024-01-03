@@ -36,6 +36,7 @@
     "nestjs": "^0.0.1",
     "nestjs-request-context": "^3.0.0",
     "nestjs-typeorm-paginate": "^4.0.4",
+    "path": "^0.12.7",
     "pg": "^8.11.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",

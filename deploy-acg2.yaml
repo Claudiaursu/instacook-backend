@@ -1,0 +1,50 @@
+apiVersion: 2019-12-01
+location: eastus
+name: myContainerGroupCC
+properties:
+  containers:
+  - name: postgres
+    properties:
+      image:  ursuclaudia/instacook-backend-postgres
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 1.5
+  - name: cooking
+    properties:
+      image: ursuclaudia/instacook-backend-cooking
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 1.5
+      ports:
+      - port: 3333
+  - name: user-interaction
+    properties:
+      image: ursuclaudia/instacook-backend-user-interaction
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 1.5
+      ports:
+      - port: 9083
+  - name: competitions
+    properties:
+      image: ursuclaudia/instacook-backend-competitions
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 1.5
+      ports:
+      - port: 9082
+  osType: Linux
+  ipAddress:
+    type: Public
+    ports:
+    - protocol: tcp
+      port: 3333
+    - protocol: tcp
+      port: 9083
+    - protocol: tcp
+      port: 9082
+type: Microsoft.ContainerInstance/containerGroups
