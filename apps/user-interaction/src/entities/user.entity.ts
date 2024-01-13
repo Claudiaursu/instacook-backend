@@ -23,7 +23,7 @@ export class UserEntity extends CommonEntity {
     example: 7.8,
     description: 'Popularity Score',
   })
-  prenume?: number;
+  prenume?: string;
 
   @Column({ type: 'text', nullable: true })
   @ApiProperty({

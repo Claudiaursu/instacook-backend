@@ -41,6 +41,21 @@ export class UserService extends TypeOrmBaseService<UserEntity> {
     }
   };
 
+  getUserByCredentials = async (username: string, password: string): Promise<UserEntity> => {
+    try{
+      const user = await this.userRepo.findOne({
+        where: {
+          nume: username,
+          prenume: password
+        },
+      });
+      return user;
+      
+    }catch(error){
+      //logger.throw("01FWXN2K70FQSZFHXXNAZZTRXA", `Could not find topic with id ${topicId}`, {error})
+    }
+  };
+
   createUser = async (user: UserEntity): Promise<UserEntity> => {
     const score = user?.totalPuncte?.toString() || '0'
     user.totalPuncte = parseFloat(score)

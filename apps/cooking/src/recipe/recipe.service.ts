@@ -19,6 +19,9 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
       order: {
         titluReteta: 'ASC'
       },
+      relations:[
+        'colectie'
+      ]
     });
     return Promise.resolve(recipes);
   };

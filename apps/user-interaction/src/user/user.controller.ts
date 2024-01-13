@@ -51,6 +51,32 @@ export class UserController {
     }
   }
 
+
+  // Login user by credentials
+  @Post('/login')
+  @ApiBody({
+    schema: {
+      type: 'object'
+    },
+  })
+  @ApiOperation({ summary: 'Login a user' })
+  async loginUser(@Body() body: any, @Res() res: Response): Promise<UserEntity | Object>  {
+    try {
+      const user = await this.userService.getUserByCredentials(body.username, body.password);
+
+      if (user) {
+        res.status(200).json(user);
+
+        return user;
+      } else {
+        return { status: 0, message: 'User not found' };
+      }
+
+    } catch (error) {
+      res.status(500).send(`Could not login user: ${error}`);
+    }
+  }
+
  // Create a new user
   @Post('')
   @ApiBody({
