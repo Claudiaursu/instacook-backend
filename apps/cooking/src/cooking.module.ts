@@ -12,6 +12,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import * as path from 'path';
+import { AzureSDKModule } from './azure-sdk/azure-sdk.module';
 
 @Module({
   imports: [
@@ -62,7 +63,8 @@ import * as path from 'path';
     CollectionModule,
     RecipeModule,
     CuisineModule,
-    ContestModule
+    ContestModule,
+    AzureSDKModule
   ],
   controllers: [CookingController],
   providers: [CookingService],

@@ -19,6 +19,9 @@ export class CollectionService extends TypeOrmBaseService<CollectionEntity> {
       order: {
         titluColectie: 'ASC'
       },
+      relations:[
+        'utilizator'
+      ]
     });
     return Promise.resolve(collections);
   };

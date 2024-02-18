@@ -10,6 +10,11 @@ async function bootstrap() {
   const app = await NestFactory.create(UserInteractionModule);
   const rabbitmqService = app.get<RabbitmqService>(RabbitmqService);
   app.connectMicroservice(rabbitmqService.getOptions('USER_INTERACTION'));
+  
+  app.enableCors({
+    origin: 'http://localhost:4200',
+  }); 
+  
   await app.listen(9083);
   //app.startAllMicroservices();
 }

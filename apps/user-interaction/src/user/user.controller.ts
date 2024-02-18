@@ -65,10 +65,10 @@ export class UserController {
       const user = await this.userService.getUserByCredentials(body.username, body.password);
 
       if (user) {
-        res.status(200).json(user);
-
-        return user;
+        res.status(200).json( { id: user.id, isAuthenticated: true } ) ;
+        return user.id;
       } else {
+        res.status(500).json({status: 1});
         return { status: 0, message: 'User not found' };
       }
 

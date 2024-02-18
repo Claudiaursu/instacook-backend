@@ -30,7 +30,7 @@ export class CollectionController {
     }
   }
 
-  @Get('')
+  @Get('/user/:userId')
   @ApiOperation({ summary: 'Get all collections for a user' })
   async findCollectionsForUser(@Param('userId') userId: string): Promise<CollectionEntity[]> {
     try {
