@@ -13,6 +13,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import * as path from 'path';
 import { AzureSDKModule } from './azure-sdk/azure-sdk.module';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './utils/guards/auth.guard';
 
 @Module({
   imports: [
@@ -40,6 +43,15 @@ import { AzureSDKModule } from './azure-sdk/azure-sdk.module';
     //   }),
     //   inject: [ConfigService],
     // }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        global: true,
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '60s' },
+      }),
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -67,6 +79,12 @@ import { AzureSDKModule } from './azure-sdk/azure-sdk.module';
     AzureSDKModule
   ],
   controllers: [CookingController],
-  providers: [CookingService],
+  providers: [
+    CookingService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class CookingModule {}

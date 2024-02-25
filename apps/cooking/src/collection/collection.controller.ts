@@ -1,5 +1,5 @@
 import { ApiBody, ApiOAuth2, ApiTags, ApiParam, ApiOperation, ApiConsumes } from '@nestjs/swagger';
-import { Body, Controller, Delete, Get, Param, Patch, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { Response } from 'express';
 import { DeleteResult, EntityManager, getManager } from 'typeorm';
 import { InjectEntityManager } from '@nestjs/typeorm';
@@ -7,6 +7,7 @@ import { plainToClass } from 'class-transformer';
 import { CollectionService } from './collection.service';
 import { CollectionEntity } from '../entities/collection.entity';
 import { logger } from '@app/common/logger';
+import { Public } from '../utils/guards/auth.guard';
 
 @ApiTags('Collection')
 @Controller('v1/collections')
@@ -18,6 +19,7 @@ export class CollectionController {
   ) { }
 
   @Get('')
+  @Public()
   @ApiOperation({ summary: 'Get all collections' })
   async findAllCollections(): Promise<CollectionEntity[]> {
     try {

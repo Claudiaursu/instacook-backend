@@ -7,19 +7,35 @@ services:
     depends_on:
       - postgres
     command: npm run start:dev cooking
-    # env_file:
-    #   - ./apps/cooking/.env
     environment:
       PG_HOST: postgres
       PG_PORT: 5432
       PG_DATABASE: instacook
       PG_USER: postgres
       PG_PASS: parolapostgres
+      JWT_SECRET: blablabla
     volumes: 
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - '3333:3333'
+
+  auth:
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    depends_on:
+      - user-interaction
+    command: npm run start:dev auth
+    environment:
+      JWT_SECRET: blablabla
+      USER_INTERACTION_URL: 'http://user-interaction:9083/v1/users'
+    volumes: 
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '8080:8080'
 
   user-interaction:
     build:
@@ -29,14 +45,13 @@ services:
     depends_on:
       - postgres
     command: npm run start:dev user-interaction
-    # env_file:
-    #   - ./apps/user-interaction/.env
     environment:
       PG_HOST: postgres
       PG_PORT: 5432
       PG_DATABASE: instacook
       PG_USER: postgres
       PG_PASS: parolapostgres
+      JWT_SECRET: blablabla
     volumes: 
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -56,6 +71,7 @@ services:
       PG_DATABASE: instacook
       PG_USER: postgres
       PG_PASS: parolapostgres
+      JWT_SECRET: blablabla
     command: npm run start:dev competitions
     volumes: 
       - .:/usr/src/app
@@ -63,10 +79,10 @@ services:
     ports:
       - '9082:9082'
 
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    ports: 
-      - '5672:5672'
+  # rabbitmq:
+  #   image: rabbitmq:3-management-alpine
+  #   ports: 
+  #     - '5672:5672'
 
   postgres:
     container_name: postgres

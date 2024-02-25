@@ -18,7 +18,9 @@ import { CompetitionEntity } from 'apps/competitions/src/entities/competition.en
      CompetitionEntity
     ]),
   ],
-  providers: [CollectionService],
+  providers: [
+    CollectionService
+  ],
   controllers: [CollectionController],
 })
 export class CollectionModule {}

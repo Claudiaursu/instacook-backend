@@ -3,13 +3,10 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Res, UploadedFile, U
 import { Response } from 'express';
 import { DeleteResult, EntityManager, getManager } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { Express } from 'express';
-import { diskStorage, Multer } from 'multer';
-import { createWriteStream, fstatSync } from 'fs';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { UserService } from './user.service';
 import { plainToClass } from 'class-transformer';
+import { Public } from '../utils/guards/auth.guard';
 
 @ApiTags('Users')
 @Controller('v1/users')
@@ -21,6 +18,7 @@ export class UserController {
     ) { }
 
   @Get('')
+  @Public()
   @ApiOperation({ summary: 'Get all users' })
   async findAllUsers(): Promise<UserEntity[]> {
     try {
@@ -51,9 +49,30 @@ export class UserController {
     }
   }
 
+    // Get a user by email
+    @Get('/email/:email')
+    @Public()
+    @ApiParam({
+      name: 'email',
+      type: 'string',
+      schema: {
+        example: '1',
+      },
+    })
+    @ApiOperation({ summary: 'Get an user by its email' })
+    async findUserByEmail(@Param('email') email: string): Promise<UserEntity | null> {
+      try {
+        const user = await this.userService.getUserByEmail(email);
+        return user;
+      } catch (error) {
+        //logger.throw("01FWY1EFYT4S0XXXT3S31459PG", `Could not find topic with id ${topicId}`)
+      }
+    }
+
 
   // Login user by credentials
   @Post('/login')
+  @Public()
   @ApiBody({
     schema: {
       type: 'object'

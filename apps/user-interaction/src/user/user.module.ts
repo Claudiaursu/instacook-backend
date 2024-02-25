@@ -6,7 +6,8 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { CollectionEntity } from 'apps/cooking/src/entities/collection.entity';
 import { CommentEntity } from '../entities/comment.entity';
-import { CompetitionEntity } from 'apps/competitions/src/entities/competition.entity';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -16,6 +17,15 @@ import { CompetitionEntity } from 'apps/competitions/src/entities/competition.en
      CollectionEntity,
      CommentEntity
     ]),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        global: true,
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '60s' },
+      }),
+    }),
   ],
   providers: [UserService],
   controllers: [UserController],

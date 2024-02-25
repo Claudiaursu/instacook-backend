@@ -32,6 +32,13 @@ export class UserEntity extends CommonEntity {
   })
   email?: string;
 
+  @Column({ type: 'text', nullable: false })
+  @ApiProperty({
+    example: '',
+    description: 'pass',
+  })
+  parola: string;
+
   @Column({ type: 'text', nullable: true })
   @ApiProperty({
     example: '../../../assets/png/topic-images/default-topic.png',

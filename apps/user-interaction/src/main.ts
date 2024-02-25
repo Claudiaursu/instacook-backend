@@ -12,7 +12,8 @@ async function bootstrap() {
   app.connectMicroservice(rabbitmqService.getOptions('USER_INTERACTION'));
   
   app.enableCors({
-    origin: 'http://localhost:4200',
+   // origin: 'http://localhost:4200',
+    origin: 'http://localhost:8080/v1/auth/login'
   }); 
   
   await app.listen(9083);

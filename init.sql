@@ -5,6 +5,7 @@ CREATE TABLE utilizator (
     nume VARCHAR(100),
     prenume VARCHAR(100),
     email VARCHAR(100),
+    parola VARCHAR(200),
     tara_origine VARCHAR(100),
     telefon VARCHAR(12),
     total_puncte INTEGER CHECK (total_puncte >= 0),

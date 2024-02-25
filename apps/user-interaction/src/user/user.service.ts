@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { TypeOrmBaseService } from '../../../../libs/common/src/database/typeorm-base.service';
 import { UserEntity } from '../entities/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService extends TypeOrmBaseService<UserEntity> {
@@ -41,6 +42,21 @@ export class UserService extends TypeOrmBaseService<UserEntity> {
     }
   };
 
+  getUserByEmail = async (email: string): Promise<UserEntity> => {
+    try{
+      const user = await this.userRepo.findOne({
+        where: {
+          email: email,
+          deletedAt: null
+        },
+      });
+      return user;
+      
+    }catch(error){
+      //logger.throw("01FWXN2K70FQSZFHXXNAZZTRXA", `Could not find topic with id ${topicId}`, {error})
+    }
+  };
+
   getUserByCredentials = async (username: string, password: string): Promise<UserEntity> => {
     try{
       const user = await this.userRepo.findOne({
@@ -59,17 +75,17 @@ export class UserService extends TypeOrmBaseService<UserEntity> {
   createUser = async (user: UserEntity): Promise<UserEntity> => {
     const score = user?.totalPuncte?.toString() || '0'
     user.totalPuncte = parseFloat(score)
-
-    const userObject = this.userRepo.create(user);
     
     try {
+
+      const saltOrRounds = 10;
+      const hashedPassword = await bcrypt.hash(user.parola, saltOrRounds);
+      user.parola = hashedPassword;
+
+      const userObject = this.userRepo.create(user);
       await this.userRepo.insert(userObject);
-      // if(user.owners && topic.owners.length > 0){
-      //   topic.owners.forEach(async (owner) =>{
-      //     await getConnection().createQueryBuilder().relation(TopicEntity, "owners").of(topicObject).add(owner)
-      //   })
-      // }
       return userObject;
+
     } catch (error) {
       //logger.throw('01FWXN3P7J082NNXV8DXMZQATV', `Could not create new topic: ${JSON.stringify(error)}`, {error});
     } 
