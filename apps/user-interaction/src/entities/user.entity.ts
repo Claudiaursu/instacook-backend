@@ -32,6 +32,13 @@ export class UserEntity extends CommonEntity {
   })
   email?: string;
 
+  @Column({ type: 'text', nullable: true })
+  @ApiProperty({
+    example: '',
+    description: 'USername',
+  })
+  username?: string;
+
   @Column({ type: 'text', nullable: false })
   @ApiProperty({
     example: '',

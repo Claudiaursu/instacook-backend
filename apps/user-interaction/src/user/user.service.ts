@@ -57,6 +57,21 @@ export class UserService extends TypeOrmBaseService<UserEntity> {
     }
   };
 
+  getUserByUsername = async (username: string): Promise<UserEntity> => {
+    try{
+      const user = await this.userRepo.findOne({
+        where: {
+          username: username,
+          deletedAt: null
+        },
+      });
+      return user;
+      
+    }catch(error){
+      //logger.throw("01FWXN2K70FQSZFHXXNAZZTRXA", `Could not find topic with id ${topicId}`, {error})
+    }
+  };
+
   getUserByCredentials = async (username: string, password: string): Promise<UserEntity> => {
     try{
       const user = await this.userRepo.findOne({

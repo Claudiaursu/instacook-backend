@@ -12,7 +12,7 @@ export class AuthService {
     ) {}
 
   async signIn(username: string, password: string): Promise<{ token: string }> {
-    const existingUser = await this.usersService.getUserByEmail(username);
+    const existingUser = await this.usersService.getUserByUsername(username);
     const isMatch = await bcrypt.compare(password, existingUser.parola);
 
     console.log(isMatch);
@@ -22,7 +22,7 @@ export class AuthService {
     }
     const payload = { 
       id: existingUser.id, 
-      email: existingUser.email
+      username: existingUser.username
     };
     
     return {

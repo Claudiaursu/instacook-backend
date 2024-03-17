@@ -10,8 +10,8 @@ export class UserService {
     private readonly httpService: HttpService
   ) {}
 
-  async getUserByEmail(email: string): Promise<any> {
-    const servicePath = `${process.env.USER_INTERACTION_URL}/email/${email}`;
+  async getUserByUsername(username: string): Promise<any> {
+    const servicePath = `${process.env.USER_INTERACTION_URL}/username/${username}`;
 
     const result = await lastValueFrom(this.httpService.get<any>(servicePath));
     return result.data;

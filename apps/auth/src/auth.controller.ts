@@ -11,13 +11,15 @@ export class AuthController {
     schema: {
       type: 'object',
       example: {
-        email: '',
+        username: '',
         parola: ''
       },
     },
   })
-  signIn(@Body() signInDto: Record<string, any>) {
+  async signIn(@Body() signInDto: Record<string, any>) {
     console.log("signinDTO", signInDto)
-    return this.authService.signIn(signInDto.email, signInDto.parola);
+    const result = await this.authService.signIn(signInDto.username, signInDto.parola);
+    console.log("result!!!!! ", result);
+    return result;
   }
 }

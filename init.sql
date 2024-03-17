@@ -4,6 +4,7 @@ CREATE TABLE utilizator (
     id int8 NOT NULL GENERATED ALWAYS AS IDENTITY,
     nume VARCHAR(100),
     prenume VARCHAR(100),
+    username VARCHAR(40),
     email VARCHAR(100),
     parola VARCHAR(200),
     tara_origine VARCHAR(100),

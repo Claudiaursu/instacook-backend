@@ -69,6 +69,26 @@ export class UserController {
       }
     }
 
+  // Get a user by username
+  @Get('/username/:username')
+  @Public()
+  @ApiParam({
+    name: 'username',
+    type: 'string',
+    schema: {
+      example: '1',
+    },
+  })
+  @ApiOperation({ summary: 'Get an user by its username' })
+  async findUserByUsername(@Param('username') username: string): Promise<UserEntity | null> {
+    try {
+      const user = await this.userService.getUserByUsername(username);
+      return user;
+    } catch (error) {
+      //logger.throw("01FWY1EFYT4S0XXXT3S31459PG", `Could not find topic with id ${topicId}`)
+    }
+  }
+
 
   // Login user by credentials
   @Post('/login')
@@ -98,6 +118,7 @@ export class UserController {
 
  // Create a new user
   @Post('')
+  @Public()
   @ApiBody({
     schema: {
       type: 'object',
