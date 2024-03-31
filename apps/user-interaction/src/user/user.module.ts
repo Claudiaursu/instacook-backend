@@ -8,6 +8,7 @@ import { CollectionEntity } from 'apps/cooking/src/entities/collection.entity';
 import { CommentEntity } from '../entities/comment.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UrmarireEntity } from '../entities/urmarire.entity';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     TypeOrmModule.forFeature([
      UserEntity,
      CollectionEntity,
-     CommentEntity
+     CommentEntity,
+     UrmarireEntity
     ]),
     JwtModule.registerAsync({
       imports: [ConfigModule],

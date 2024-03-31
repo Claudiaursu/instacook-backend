@@ -7,6 +7,7 @@ import { CollectionEntity } from '../entities/collection.entity';
 import { UserEntity } from 'apps/user-interaction/src/entities/user.entity';
 import { RecipeEntity } from '../entities/recipe.entity';
 import { CompetitionEntity } from 'apps/competitions/src/entities/competition.entity';
+import { UrmarireEntity } from 'apps/user-interaction/src/entities/urmarire.entity';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { CompetitionEntity } from 'apps/competitions/src/entities/competition.en
      CollectionEntity,
      UserEntity,
      RecipeEntity,
-     CompetitionEntity
+     CompetitionEntity,
+     UrmarireEntity
     ]),
   ],
   providers: [
