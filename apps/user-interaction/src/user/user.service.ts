@@ -64,6 +64,10 @@ export class UserService extends TypeOrmBaseService<UserEntity> {
           username: username,
           deletedAt: null
         },
+         relations:[
+          'followers',
+          'follows'
+        ]
       });
       return user;
       

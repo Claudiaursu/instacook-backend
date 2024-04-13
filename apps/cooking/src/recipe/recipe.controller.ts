@@ -27,6 +27,26 @@ export class RecipeController {
     }
   }
 
+  @Get('/users/:userId')
+  @ApiParam({
+    name: 'userId',
+    type: 'string',
+    schema: {
+      example: '1',
+    },
+  })
+  @ApiOperation({ summary: 'Get all recipes for user' })
+  async findRecipesForUser(@Param('userId') userId: string): Promise<RecipeEntity[] | null> {
+    try {
+      const allRecipesForUser = await this.recipeService.getRecipesForUser(userId);
+      return allRecipesForUser;
+      
+    } catch (error) {
+      logger.throw("01J4GH5NR8QVJYB9F6C65V0RHHH", `Could not find all recipes for user`, { error })
+      return error;
+    }
+  }
+
   @Get('/:recipeId')
   @ApiParam({
     name: 'recipeId',

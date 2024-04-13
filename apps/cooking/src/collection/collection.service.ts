@@ -65,6 +65,7 @@ export class CollectionService extends TypeOrmBaseService<CollectionEntity> {
     collection.publica = publica;
 
     const collectionObject = this.collectionRepo.create(collection);
+    console.log("collectionObject ", collectionObject);
     
     try {
       await this.collectionRepo.insert(collectionObject);

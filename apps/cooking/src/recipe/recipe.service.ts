@@ -4,12 +4,15 @@ import { DeleteResult, Repository } from 'typeorm';
 import { TypeOrmBaseService } from '../../../../libs/common/src/database/typeorm-base.service';
 import { RecipeEntity } from '../entities/recipe.entity';
 import { logger } from '@app/common/logger';
+import { CollectionService } from '../collection/collection.service';
 
 @Injectable()
 export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
   constructor(
     @InjectRepository(RecipeEntity)
     protected readonly recipeRepo: Repository<RecipeEntity>,
+    private readonly collectionService: CollectionService,
+
   ) {
     super();
   }
@@ -36,6 +39,34 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
         }
       },
     });
+    return Promise.resolve(recipes);
+  };
+
+  getRecipesForUser = async (userId: string): Promise<RecipeEntity[]> => {
+    const collections = await this.collectionService.getCollectionsForUser(userId);
+    const collection_ids = collections.map(col => col.id);
+
+    console.log("IDS ", collection_ids)
+
+    // const recipes = await this.recipeRepo.find({
+    //   where: {
+    //     colectie: { id: { $in: collection_ids } }
+    //   },
+    // });
+
+    let recipes;
+    try {
+      recipes = await this.recipeRepo
+      .createQueryBuilder('recipe')
+      .leftJoinAndSelect('recipe.colectie', 'colectie') 
+      .where('colectie.id IN (:...ids)', { ids: collection_ids })
+      .getMany();
+
+      console.log("REZULTAT ", recipes )
+
+    } catch (error) {
+      console.log(error)
+    }
     return Promise.resolve(recipes);
   };
 

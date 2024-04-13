@@ -5,7 +5,7 @@ import { Column, DeleteDateColumn, Entity, ManyToOne, OneToMany } from 'typeorm'
 import { UserEntity } from './user.entity';
 import { RecipeEntity } from 'apps/cooking/src/entities/recipe.entity';
 
-@Entity({ schema: 'public', name: 'utilizator' })
+@Entity({ schema: 'public', name: 'urmarire' })
 export class UrmarireEntity extends CommonEntity {
   constructor(init?: Partial<UrmarireEntity>) {
     super();

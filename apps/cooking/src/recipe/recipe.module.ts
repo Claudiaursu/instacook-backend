@@ -10,6 +10,7 @@ import { CommentEntity } from 'apps/user-interaction/src/entities/comment.entity
 import { CuisineEntity } from '../entities/cuisine.entity';
 import { CompetitionEntity } from 'apps/competitions/src/entities/competition.entity';
 import { UrmarireEntity } from 'apps/user-interaction/src/entities/urmarire.entity';
+import { CollectionService } from '../collection/collection.service';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { UrmarireEntity } from 'apps/user-interaction/src/entities/urmarire.enti
      UrmarireEntity
     ]),
   ],
-  providers: [RecipeService],
+  providers: [RecipeService, CollectionService],
   controllers: [RecipeController],
 })
 export class RecipeModule {}
