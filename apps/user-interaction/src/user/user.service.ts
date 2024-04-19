@@ -24,6 +24,15 @@ export class UserService extends TypeOrmBaseService<UserEntity> {
     return Promise.resolve(users);
   };
 
+  getAllUsersBySearchQuery = async (search: string): Promise<UserEntity[]> => {
+    const users = await this.userRepo
+      .createQueryBuilder('utilizator')
+      .where('utilizator.username LIKE :search', { search: `${search}%` })
+      .getMany();
+
+    return Promise.resolve(users);
+  };
+
   getUserById = async (userId: string): Promise<UserEntity> => {
     try{
       const user = await this.userRepo.findOne({

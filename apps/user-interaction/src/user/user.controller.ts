@@ -49,6 +49,27 @@ export class UserController {
     }
   }
 
+  @Get('/search/:query')
+  @Public()
+  @ApiParam({
+    name: 'query',
+    type: 'string',
+    schema: {
+      example: 'test',
+    },
+  })
+  @ApiOperation({ summary: 'Get all users by search query' })
+  async findUsersBySearch(@Param('query') query: string): Promise<UserEntity[]> {
+    try {
+      const allUsers = await this.userService.getAllUsersBySearchQuery(query);
+      return allUsers;
+    } catch (error) {
+        return error;
+      //logger.throw("01FWXNBDFSFMM8E47DCYY010ZF", `Could not find all topics`, {error})
+    }
+  }
+
+
     // Get a user by email
     @Get('/email/:email')
     @Public()
