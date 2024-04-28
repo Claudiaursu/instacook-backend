@@ -40,9 +40,10 @@ export class UserService extends TypeOrmBaseService<UserEntity> {
           id:parseInt(userId),
           deletedAt: null
         },
-        // relations:[
-        //   'owners'
-        // ]
+        relations:[
+          'followers',
+          'follows'
+        ]
       });
       return user;
       
@@ -103,6 +104,8 @@ export class UserService extends TypeOrmBaseService<UserEntity> {
   createUser = async (user: UserEntity): Promise<UserEntity> => {
     const score = user?.totalPuncte?.toString() || '0'
     user.totalPuncte = parseFloat(score)
+
+    user.pozaProfil = user.pozaProfil || 'profile_images/default.png';
     
     try {
 

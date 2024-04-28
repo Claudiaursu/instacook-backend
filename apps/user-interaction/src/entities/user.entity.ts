@@ -68,6 +68,13 @@ export class UserEntity extends CommonEntity {
   })
   totalPuncte?: number;
 
+  @Column({ type: 'text', nullable: true })
+  @ApiProperty({
+    example: '',
+    description: 'poza profil',
+  })
+  pozaProfil?: string;
+
   @DeleteDateColumn({
     type: 'timestamptz',
     comment: 'Time when record was deleted',
