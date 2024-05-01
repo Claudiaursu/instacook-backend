@@ -10,6 +10,7 @@ import { CollectionModule } from 'apps/cooking/src/collection/collection.module'
 import { APP_GUARD } from '@nestjs/core/constants';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthGuard } from './utils/guards/auth.guard';
+import { FollowingModule } from './following/following.module';
 
 @Module({
   imports: [  
@@ -29,7 +30,8 @@ import { AuthGuard } from './utils/guards/auth.guard';
     RabbitmqModule,
     UserModule,
     CommentModule,
-    CollectionModule
+    CollectionModule,
+    FollowingModule
   ],
   controllers: [UserInteractionController],
   providers: [

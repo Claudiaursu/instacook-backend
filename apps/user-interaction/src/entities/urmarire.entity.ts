@@ -27,7 +27,7 @@ export class UrmarireEntity extends CommonEntity {
     example: {
       id: 1,
     },
-    description: 'Urmarit = are follower',
+    description: 'Urmarit = are follower = cel care e urmarit',
   })
   urmarit?: UserEntity;
 
@@ -37,7 +37,7 @@ export class UrmarireEntity extends CommonEntity {
     example: {
       id: 1,
     },
-    description: 'Urmaritor = urmareste',
+    description: 'Urmaritor = cel care urmareste',
   })
   urmaritor?: UserEntity;
 }
