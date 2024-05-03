@@ -28,6 +28,7 @@ export class FollowingService extends TypeOrmBaseService<UrmarireEntity> {
     });
     return Promise.resolve(followers);
   };
+  
   getUsersFollowedByUser = async (userId: string): Promise<UrmarireEntity[]> => {
     const followers = await this.followingRepo.find({
       where: {
