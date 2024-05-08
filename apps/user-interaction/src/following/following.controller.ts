@@ -1,5 +1,5 @@
 import { ApiBody, ApiTags, ApiParam, ApiOperation } from '@nestjs/swagger';
-import { Body, Controller, Delete, Get, Param, Patch, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { DeleteResult } from 'typeorm';
 import { FollowingService } from './following.service'; // Assuming you have a CommentService
@@ -56,23 +56,11 @@ export class FollowingController {
   }
 
 
-  @Post('/status')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      example: {
-        urmaritId: '1',
-        urmaritor: '2',
-      },
-    },
-  })
+  @Get('/status')
   @ApiOperation({ summary: 'Get status for 2 users' })
-  async getFollowingStatus(@Body() relation: UrmarireEntity): Promise<{status: boolean} | null> {
+  async getFollowingStatus(@Query('source') source: string, @Query('destination') destination: string): Promise<{status: boolean} | null> {
     try {
       let followStatus = false;
-      const source = relation?.urmaritor.id.toString();
-      const destination = relation?.urmarit.id.toString();
-
       const relationStatus = await this.followingService.getRelationByUsersIds(source, destination);
 
       if (relationStatus) {
@@ -83,7 +71,7 @@ export class FollowingController {
       };
 
     } catch (error) {
-      logger.throw("01J4GH5P7RY8W2K9FV1DZW4Q9M", `Could not find follow status for users with ${relation?.urmaritor.id} and ${relation?.urmarit.id}`)
+      logger.throw("01J4GH5P7RY8W2K9FV1DZW4Q9M", `Could not find follow status for users with ${source} and ${destination}`)
       return error;
     }
   }

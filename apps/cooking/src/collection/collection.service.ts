@@ -35,6 +35,9 @@ export class CollectionService extends TypeOrmBaseService<CollectionEntity> {
           id: userID
         }
       },
+      relations: [
+        'retete'
+      ]
     });
     return Promise.resolve(collections);
   };

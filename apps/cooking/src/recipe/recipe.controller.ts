@@ -67,6 +67,27 @@ export class RecipeController {
     }
   }
 
+  @Get('/collection/:collectionId')
+  @ApiParam({
+    name: 'collectionId',
+    type: 'string',
+    schema: {
+      example: '1',
+    },
+  })
+  @ApiOperation({ summary: 'Get all recipes by collection id' })
+  async getRecipesByCollection(@Param('collectionId') collectionId: string): Promise<RecipeEntity[] | null> {
+    try {
+      const recipes = await this.recipeService.getRecipesForCollection(collectionId);
+      return recipes;
+
+    } catch (error) {
+      console.log("ERROR< ", error)
+      logger.throw("01J4GH5P7RY8W2K9FV1DZW4Q9M", `Could not find recipes for collection ${collectionId}`)
+      return error;
+    }
+  }
+
   @Post('')
   @ApiBody({
     schema: {
