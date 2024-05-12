@@ -11,6 +11,7 @@ import { CuisineEntity } from '../entities/cuisine.entity';
 import { CompetitionEntity } from 'apps/competitions/src/entities/competition.entity';
 import { UrmarireEntity } from 'apps/user-interaction/src/entities/urmarire.entity';
 import { CollectionService } from '../collection/collection.service';
+import { ReactionEntity } from 'apps/user-interaction/src/entities/reaction.entity';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { CollectionService } from '../collection/collection.service';
      CommentEntity,
      CuisineEntity,
      CompetitionEntity,
-     UrmarireEntity
+     UrmarireEntity,
+     ReactionEntity
     ]),
   ],
   providers: [RecipeService, CollectionService],

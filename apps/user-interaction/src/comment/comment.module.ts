@@ -9,6 +9,7 @@ import { CommentEntity } from '../entities/comment.entity';
 import { RecipeEntity } from 'apps/cooking/src/entities/recipe.entity';
 import { CuisineEntity } from 'apps/cooking/src/entities/cuisine.entity';
 import { UrmarireEntity } from '../entities/urmarire.entity';
+import { ReactionEntity } from '../entities/reaction.entity';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { UrmarireEntity } from '../entities/urmarire.entity';
      CommentEntity,
      RecipeEntity,
      CuisineEntity,
-     UrmarireEntity
+     UrmarireEntity,
+     ReactionEntity
     ]),
   ],
   providers: [CommentService],

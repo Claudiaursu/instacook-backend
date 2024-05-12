@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
 import { UserEntity } from '../entities/user.entity';
-import { UserService } from './user.service';
-import { UserController } from './user.controller';
+import { ReactionController } from './reaction.controller';
 import { CollectionEntity } from 'apps/cooking/src/entities/collection.entity';
 import { CommentEntity } from '../entities/comment.entity';
-import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { RecipeEntity } from 'apps/cooking/src/entities/recipe.entity';
+import { CuisineEntity } from 'apps/cooking/src/entities/cuisine.entity';
 import { UrmarireEntity } from '../entities/urmarire.entity';
+import { ReactionService } from './reaction.service';
 import { ReactionEntity } from '../entities/reaction.entity';
 
 @Module({
@@ -18,20 +18,13 @@ import { ReactionEntity } from '../entities/reaction.entity';
      UserEntity,
      CollectionEntity,
      CommentEntity,
+     RecipeEntity,
+     CuisineEntity,
      UrmarireEntity,
      ReactionEntity
     ]),
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        global: true,
-        secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '60s' },
-      }),
-    }),
   ],
-  providers: [UserService],
-  controllers: [UserController],
+  providers: [ReactionService],
+  controllers: [ReactionController],
 })
-export class UserModule {}
+export class ReactionModule {}

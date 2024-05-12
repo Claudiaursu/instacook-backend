@@ -4,6 +4,7 @@ import { CollectionEntity } from 'apps/cooking/src/entities/collection.entity';
 import { Column, DeleteDateColumn, Entity, OneToMany } from 'typeorm';
 import { CommentEntity } from './comment.entity';
 import { UrmarireEntity } from './urmarire.entity';
+import { ReactionEntity } from './reaction.entity';
 
 @Entity({ schema: 'public', name: 'utilizator' })
 export class UserEntity extends CommonEntity {
@@ -106,6 +107,17 @@ export class UserEntity extends CommonEntity {
     description: 'Comments',
   })
   comentarii?: CommentEntity[];
+
+  @OneToMany(() => ReactionEntity, (reaction) => reaction.utilizator, {
+    cascade: true,
+  })
+  @ApiProperty({
+    example: {
+      id: 1,
+    },
+    description: 'Reactions',
+  })
+  reactii?: ReactionEntity[];
 
   @OneToMany(() => UrmarireEntity, (urmarire) => urmarire.urmarit, {
     cascade: true,

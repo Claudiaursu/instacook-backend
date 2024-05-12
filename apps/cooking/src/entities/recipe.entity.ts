@@ -6,6 +6,7 @@ import { CollectionEntity } from './collection.entity';
 import { CuisineEntity } from './cuisine.entity';
 import { CommentEntity } from 'apps/user-interaction/src/entities/comment.entity';
 import { CompetitionEntity } from 'apps/competitions/src/entities/competition.entity';
+import { ReactionEntity } from 'apps/user-interaction/src/entities/reaction.entity';
 
 @Entity({ schema: 'public', name: 'reteta' })
 export class RecipeEntity extends CommonEntity {
@@ -101,6 +102,17 @@ export class RecipeEntity extends CommonEntity {
     description: 'Comments',
   })
   comentarii?: CommentEntity[];
+
+  @OneToMany(() => ReactionEntity, (reaction) => reaction.reteta, {
+    cascade: true,
+  })
+  @ApiProperty({
+    example: {
+      id: 1,
+    },
+    description: 'Reactions',
+  })
+  reactii?: ReactionEntity[];
 
   @OneToMany(() => CompetitionEntity, (competition) => competition.retetaCastigatoare, {
     cascade: true,

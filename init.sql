@@ -84,15 +84,16 @@ CREATE TABLE concurs (
 );
 
 CREATE TABLE reactie_reteta (
-    id_utilizator INTEGER,
-    id_reteta INTEGER,
+    id int8 NOT NULL GENERATED ALWAYS AS IDENTITY,
+    utilizator_id INTEGER,
+    reteta_id INTEGER,
     reactie VARCHAR(50),
-    PRIMARY KEY (id_utilizator, id_reteta),
-    FOREIGN KEY (id_utilizator) REFERENCES utilizator(id),
-    FOREIGN KEY (id_reteta) REFERENCES reteta(id),
+    FOREIGN KEY (utilizator_id) REFERENCES utilizator(id),
+    FOREIGN KEY (reteta_id) REFERENCES reteta(id),
     created_at timestamptz NULL DEFAULT now(),
 	updated_at timestamptz NULL DEFAULT now(),
-	deleted_at timestamptz NULL DEFAULT null
+	deleted_at timestamptz NULL DEFAULT null,
+    constraint reactie_reteta_pk PRIMARY KEY(id)
 );
 
 CREATE TABLE comentariu (

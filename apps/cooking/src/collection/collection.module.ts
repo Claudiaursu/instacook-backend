@@ -8,6 +8,7 @@ import { UserEntity } from 'apps/user-interaction/src/entities/user.entity';
 import { RecipeEntity } from '../entities/recipe.entity';
 import { CompetitionEntity } from 'apps/competitions/src/entities/competition.entity';
 import { UrmarireEntity } from 'apps/user-interaction/src/entities/urmarire.entity';
+import { ReactionEntity } from 'apps/user-interaction/src/entities/reaction.entity';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { UrmarireEntity } from 'apps/user-interaction/src/entities/urmarire.enti
      UserEntity,
      RecipeEntity,
      CompetitionEntity,
-     UrmarireEntity
+     UrmarireEntity,
+     ReactionEntity
     ]),
   ],
   providers: [
