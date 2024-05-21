@@ -31,15 +31,38 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
 
   getRecipesForCollection = async (colectieId: string): Promise<RecipeEntity[]> => {
     const colectieID = parseInt(colectieId);
+  
+    // const recipesWithReactionCount = await this.recipeRepo.createQueryBuilder('reteta')
+    //   .leftJoin('reteta.reactii', 'reactie_reteta')
+    //   .select(['reteta', 'COUNT(reactie_reteta.id) as reactii'])
+    //   .where('reteta.colectie.id = :colectieID', { colectieID })
+    //   .groupBy('reteta.id')
+    //   .getRawMany();
 
-    const recipes = await this.recipeRepo.find({
-      where: {
-        colectie: {
-          id: colectieID
-        }
-      },
-    });
-    return Promise.resolve(recipes);
+    const recipesWithReactionCount = await this.recipeRepo.createQueryBuilder('reteta')
+    .leftJoin('reteta.reactii', 'reactie_reteta')
+    .leftJoin('reteta.comentarii', 'comentariu')
+    .select([
+      'reteta.id as id',
+      'reteta.created_at as createdAt',
+      'reteta.updated_at as updatedAt',
+      'reteta.titlu_reteta as titluReteta',
+      'reteta.dificultate as dificultate',
+      'reteta.ingrediente as ingrediente',
+      'reteta.instructiuni as instructiuni',
+      'reteta.cale_poza as calePoza',
+      'reteta.cale_video as caleVideo',
+      'reteta.participa_concurs as participaConcurs',
+      'reteta.deleted_at as deletedAt',
+      'COUNT(reactie_reteta.id) as reactii',
+      'COUNT(comentariu.id) as comentarii'
+    ])
+    .where('reteta.colectie.id = :colectieID', { colectieID })
+    .groupBy('reteta.id')
+    .getRawMany();
+
+    return Promise.resolve(recipesWithReactionCount);
+
   };
 
   getRecipesForUser = async (userId: string): Promise<RecipeEntity[]> => {
@@ -47,12 +70,6 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
     const collection_ids = collections.map(col => col.id);
 
     console.log("IDS ", collection_ids)
-
-    // const recipes = await this.recipeRepo.find({
-    //   where: {
-    //     colectie: { id: { $in: collection_ids } }
-    //   },
-    // });
 
     let recipes;
     try {
@@ -72,12 +89,18 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
 
   getRecipeById = async (recipeId: string): Promise<RecipeEntity> => {
     try {
-      const recipe = await this.recipeRepo.findOne({
-        where: {
-          id: parseInt(recipeId),
-          deletedAt: null
-        },
-      });
+      const recipe = await this.recipeRepo
+      .createQueryBuilder('recipe')
+      .leftJoinAndSelect('recipe.reactii', 'reactii')
+      .leftJoin('reactii.utilizator', 'utilizator')
+      .addSelect(['utilizator.id'])
+      .leftJoinAndSelect('recipe.comentarii', 'comentarii')
+      .leftJoin('comentarii.utilizator', 'autor')
+      .addSelect(['autor.username', 'autor.pozaProfil'])
+      .where('recipe.id = :recipeId', { recipeId: parseInt(recipeId) })
+      .andWhere('recipe.deletedAt IS NULL')
+      .getOne();
+
       return recipe;
 
     } catch (error) {

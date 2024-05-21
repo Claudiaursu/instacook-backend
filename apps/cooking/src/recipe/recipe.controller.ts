@@ -59,6 +59,11 @@ export class RecipeController {
   async findRecipe(@Param('recipeId') recipeId: string): Promise<RecipeEntity | null> {
     try {
       const recipe = await this.recipeService.getRecipeById(recipeId);
+      // recipe.reactii = recipe.reactii.map((reactie) => ({
+      //   utilizator: {
+      //     id: reactie.utilizator.id,
+      //   },
+      // }));
       return recipe;
 
     } catch (error) {

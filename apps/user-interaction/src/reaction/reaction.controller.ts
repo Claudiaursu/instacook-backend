@@ -39,8 +39,8 @@ export class ReactionController {
       },
     },
   })
-  @ApiOperation({ summary: 'Create a new reaction' })
-  async createComment(@Body() comment: ReactionEntity, @Res() res: Response) {
+  @ApiOperation({ summary: 'Create a new like' })
+  async createReaction(@Body() comment: ReactionEntity, @Res() res: Response) {
     try {
       const reactionClass = plainToClass(ReactionEntity, comment);
       const createdObject = await this.reactionService.createReaction(reactionClass);
@@ -53,15 +53,36 @@ export class ReactionController {
     }
   }
 
-  @Delete('/remove')
-  @ApiOperation({ summary: 'Deletes a reaction by userId and recipeID' })
- 
-  async deleteReaction(@Query('recipeId') recipeId: string, @Query('userId') userId: string): Promise<DeleteResult> {
+  @Post('/remove')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      example: {
+        content: 'This is a reaction.',
+        userId: '1',
+        recipeId: '2',
+      },
+    },
+  })
+  @ApiOperation({ summary: 'Remove a like' })
+  async deleteReaction(@Body() reaction: ReactionEntity): Promise<DeleteResult> {
     try {
-      const deleteResult = await this.reactionService.deleteReaction(recipeId, userId);
+      const deleteResult = await this.reactionService.deleteReaction(reaction);
       return deleteResult;
     } catch (error) {
-      logger.throw("01J4GH5T7R38W2K9FV1DZW4Q9M", `Could not delete reaction from user with id ${userId} for recipe with id ${recipeId}`, { error })
+      logger.throw("01J4GH5R7F38W2K9FV1DZW4Q9P", `Could not remove reaction`, { error })
     }
   }
+
+  // @Delete('/remove')
+  // @ApiOperation({ summary: 'Deletes a reaction by userId and recipeID' })
+ 
+  // async deleteReaction(@Query('recipeId') recipeId: string, @Query('userId') userId: string): Promise<DeleteResult> {
+  //   try {
+  //     const deleteResult = await this.reactionService.deleteReaction(recipeId, userId);
+  //     return deleteResult;
+  //   } catch (error) {
+  //     logger.throw("01J4GH5T7R38W2K9FV1DZW4Q9M", `Could not delete reaction from user with id ${userId} for recipe with id ${recipeId}`, { error })
+  //   }
+  // }
 }

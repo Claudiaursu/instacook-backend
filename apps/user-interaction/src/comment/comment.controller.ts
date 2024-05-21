@@ -14,15 +14,15 @@ export class CommentController {
     private readonly commentService: CommentService,
   ) { }
 
-  @Get('')
-  @ApiOperation({ summary: 'Get all comments' })
-  async findAllComments(): Promise<CommentEntity[]> {
+  @Get('/:recipeId')
+  @ApiOperation({ summary: 'Get all comments for a recipe' })
+  async findRecipesForRecipe(@Param('recipeId') recipeId: string): Promise<CommentEntity[]> {
     try {
-      const allComments = await this.commentService.getAllComments();
-      return allComments;
+      const reactions = await this.commentService.getCommentsForRecipe(recipeId);
+      return reactions;
 
     } catch (error) {
-      logger.throw("01J4GH5NR8QVJYB9F6C65V0RHHH", `Could not find all comments`, { error })
+      logger.throw("01FWXNBDFSFMM8E47DCYY010ZF", `Could not find all comments`, { error })
       return error;
     }
   }

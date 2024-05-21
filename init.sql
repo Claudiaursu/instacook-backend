@@ -96,6 +96,10 @@ CREATE TABLE reactie_reteta (
     constraint reactie_reteta_pk PRIMARY KEY(id)
 );
 
+ALTER TABLE reactie_reteta
+ADD CONSTRAINT unique_like
+UNIQUE(reteta_id,utilizator_id);
+
 CREATE TABLE comentariu (
     id int8 NOT NULL GENERATED ALWAYS AS IDENTITY,
     text VARCHAR(400),

@@ -22,9 +22,15 @@ export class ReactionService extends TypeOrmBaseService<ReactionEntity> {
           id: parseInt(recipeId),
         },
       },
-      // relations: [
-      //   'utilizator'
-      // ]
+      relations: [
+        'utilizator'
+      ],
+      select: {
+        utilizator: {
+          username: true,
+          pozaProfil: true
+        }, 
+      }
     });
     return Promise.resolve(reactions);
   };
@@ -40,14 +46,19 @@ export class ReactionService extends TypeOrmBaseService<ReactionEntity> {
     }
   };
 
-  deleteReaction = async (recipeId: string, userId: string): Promise<DeleteResult> => {
+  deleteReaction = async (reaction: ReactionEntity): Promise<DeleteResult> => {
+    const recipeId = reaction.reteta.id;
+    const userId = reaction.utilizator.id;
+
+    console.log("s-a venit sa se stearga recipeId ", recipeId +  "  -  ", userId)
+
     try {
       const deleteResult = await this.reactionRepo.delete({
         reteta: {
-          id: parseInt(recipeId)
+          id: recipeId
         },
         utilizator: {
-          id: parseInt(userId)
+          id: userId
         }
       });
       return deleteResult;
