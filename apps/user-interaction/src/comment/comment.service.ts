@@ -66,13 +66,16 @@ export class CommentService extends TypeOrmBaseService<CommentEntity> {
       },
     });
 
+    console.log("comment------", comment)
+    console.log("existingObject------", existingObject)
+
     try {
       if (existingObject) {
         const updatedResult = await this.commentRepo.update(parseInt(commentId), comment);
         return updatedResult;
       }
     } catch (error) {
-      logger.throw("01J4GH5N7M38K2H9FV1DZW4Q9P", `Could not find any comment with id ${commentId}`);
+      logger.throw("01J4GH5N7M38K2H9FV1DZW4Q9P", `Could not find any comment with id ${commentId}`, error);
     }
   };
 

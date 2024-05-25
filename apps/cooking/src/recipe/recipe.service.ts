@@ -96,7 +96,7 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
       .addSelect(['utilizator.id'])
       .leftJoinAndSelect('recipe.comentarii', 'comentarii')
       .leftJoin('comentarii.utilizator', 'autor')
-      .addSelect(['autor.username', 'autor.pozaProfil'])
+      .addSelect(['autor.username', 'autor.pozaProfil', 'autor.id'])
       .where('recipe.id = :recipeId', { recipeId: parseInt(recipeId) })
       .andWhere('recipe.deletedAt IS NULL')
       .getOne();

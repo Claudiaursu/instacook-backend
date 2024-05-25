@@ -74,15 +74,4 @@ export class ReactionController {
     }
   }
 
-  // @Delete('/remove')
-  // @ApiOperation({ summary: 'Deletes a reaction by userId and recipeID' })
- 
-  // async deleteReaction(@Query('recipeId') recipeId: string, @Query('userId') userId: string): Promise<DeleteResult> {
-  //   try {
-  //     const deleteResult = await this.reactionService.deleteReaction(recipeId, userId);
-  //     return deleteResult;
-  //   } catch (error) {
-  //     logger.throw("01J4GH5T7R38W2K9FV1DZW4Q9M", `Could not delete reaction from user with id ${userId} for recipe with id ${recipeId}`, { error })
-  //   }
-  // }
 }

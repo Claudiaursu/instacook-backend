@@ -100,7 +100,7 @@ export class CommentController {
     }
   }
 
-  @Delete('/:commentId')
+  @Delete('/remove/:commentId')
   @ApiOperation({ summary: 'Deletes a comment by id' })
   @ApiParam({
     name: 'commentId',
