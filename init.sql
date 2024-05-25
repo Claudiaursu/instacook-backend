@@ -56,7 +56,7 @@ CREATE TABLE reteta (
     id int8 NOT NULL GENERATED ALWAYS AS IDENTITY,
     titlu_reteta VARCHAR(100),
     ingrediente VARCHAR(400),
-    instructiuni VARCHAR(400),
+    instructiuni VARCHAR(700),
     cale_poza VARCHAR(200),
     cale_video VARCHAR(200),
 	participa_concurs BOOLEAN DEFAULT FALSE,
@@ -93,7 +93,8 @@ CREATE TABLE reactie_reteta (
     created_at timestamptz NULL DEFAULT now(),
 	updated_at timestamptz NULL DEFAULT now(),
 	deleted_at timestamptz NULL DEFAULT null,
-    constraint reactie_reteta_pk PRIMARY KEY(id)
+    constraint reactie_reteta_pk PRIMARY KEY(id),
+    UNIQUE (utilizator_id, reteta_id)
 );
 
 ALTER TABLE reactie_reteta
@@ -118,3 +119,6 @@ ALTER COLUMN ingrediente TYPE TEXT[] USING ARRAY[ingrediente];
 ALTER TABLE reteta
 ADD COLUMN dificultate VARCHAR(10);
 
+CREATE INDEX idx_reteta_colectie_id ON reteta (colectie_id);
+CREATE INDEX idx_colectie_utilizator_id ON colectie (utilizator_id);
+CREATE INDEX idx_colectie_publica ON colectie (publica);

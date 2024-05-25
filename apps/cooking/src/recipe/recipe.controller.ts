@@ -47,6 +47,27 @@ export class RecipeController {
     }
   }
 
+
+  @Get('/users/public/:userId')
+  @ApiParam({
+    name: 'userId',
+    type: 'string',
+    schema: {
+      example: '1',
+    },
+  })
+  @ApiOperation({ summary: 'Get all public recipes for user' })
+  async findPublicRecipesForUser(@Param('userId') userId: string): Promise<RecipeEntity[] | null> {
+    try {
+      const allRecipesForUser = await this.recipeService.getPublicRecipesForUser(userId);
+      return allRecipesForUser;
+      
+    } catch (error) {
+      logger.throw("01J4GH5NR8QVJYB9F6C65V0RHHH", `Could not find all public recipes for user`, { error })
+      return error;
+    }
+  }
+
   @Get('/:recipeId')
   @ApiParam({
     name: 'recipeId',

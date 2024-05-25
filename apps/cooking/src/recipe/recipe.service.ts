@@ -87,6 +87,29 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
     return Promise.resolve(recipes);
   };
 
+  getPublicRecipesForUser = async (userId: string): Promise<RecipeEntity[]> => {
+    const collections = await this.collectionService.getCollectionsForUser(userId);
+    const collection_ids = collections.map(col => col.id);
+
+    console.log("IDS ", collection_ids)
+
+    let recipes;
+    try {
+      recipes = await this.recipeRepo
+      .createQueryBuilder('recipe')
+      .leftJoinAndSelect('recipe.colectie', 'colectie') 
+      .where('colectie.id IN (:...ids)', { ids: collection_ids })
+      .andWhere('colectie.publica = true')  
+      .getMany();
+
+      console.log("REZULTAT ", recipes )
+
+    } catch (error) {
+      console.log(error)
+    }
+    return Promise.resolve(recipes);
+  };
+
   getRecipeById = async (recipeId: string): Promise<RecipeEntity> => {
     try {
       const recipe = await this.recipeRepo
