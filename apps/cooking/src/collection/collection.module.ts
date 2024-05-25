@@ -9,6 +9,7 @@ import { RecipeEntity } from '../entities/recipe.entity';
 import { CompetitionEntity } from 'apps/competitions/src/entities/competition.entity';
 import { UrmarireEntity } from 'apps/user-interaction/src/entities/urmarire.entity';
 import { ReactionEntity } from 'apps/user-interaction/src/entities/reaction.entity';
+import { NotificationEntity } from 'apps/notifications/src/entities/notification.entity';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { ReactionEntity } from 'apps/user-interaction/src/entities/reaction.enti
      RecipeEntity,
      CompetitionEntity,
      UrmarireEntity,
-     ReactionEntity
+     ReactionEntity,
+     NotificationEntity
     ]),
   ],
   providers: [

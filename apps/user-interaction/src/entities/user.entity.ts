@@ -5,6 +5,7 @@ import { Column, DeleteDateColumn, Entity, OneToMany } from 'typeorm';
 import { CommentEntity } from './comment.entity';
 import { UrmarireEntity } from './urmarire.entity';
 import { ReactionEntity } from './reaction.entity';
+import { NotificationEntity } from 'apps/notifications/src/entities/notification.entity';
 
 @Entity({ schema: 'public', name: 'utilizator' })
 export class UserEntity extends CommonEntity {
@@ -140,4 +141,15 @@ export class UserEntity extends CommonEntity {
     description: 'cati oameni urmareste = de cate ori e urmaritor',
   })
   follows?: UrmarireEntity[];
+
+  @OneToMany(() => NotificationEntity, (notification) => notification.utilizator, {
+    cascade: true,
+  })
+  @ApiProperty({
+    example: {
+      id: 1,
+    },
+    description: 'Notificari',
+  })
+  notificari?: NotificationEntity[];
 }

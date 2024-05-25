@@ -113,6 +113,18 @@ CREATE TABLE comentariu (
 	constraint comentariu_pk PRIMARY KEY(id)
 );
 
+CREATE TABLE notificare (
+    id int8 NOT NULL GENERATED ALWAYS AS IDENTITY,
+    text VARCHAR(200),
+    categorie VARCHAR(20),
+	citita BOOLEAN DEFAULT FALSE,
+    utilizator_id INTEGER REFERENCES utilizator(id),
+	created_at timestamptz NULL DEFAULT now(),
+	updated_at timestamptz NULL DEFAULT now(),
+	deleted_at timestamptz NULL DEFAULT null,
+	constraint notificare_pk PRIMARY KEY(id)
+);
+
 ALTER TABLE reteta
 ALTER COLUMN ingrediente TYPE TEXT[] USING ARRAY[ingrediente];
 
@@ -122,3 +134,5 @@ ADD COLUMN dificultate VARCHAR(10);
 CREATE INDEX idx_reteta_colectie_id ON reteta (colectie_id);
 CREATE INDEX idx_colectie_utilizator_id ON colectie (utilizator_id);
 CREATE INDEX idx_colectie_publica ON colectie (publica);
+CREATE INDEX idx_notificare_id ON notificare (utilizator_id);
+

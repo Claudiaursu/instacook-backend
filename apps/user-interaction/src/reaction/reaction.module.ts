@@ -10,6 +10,7 @@ import { CuisineEntity } from 'apps/cooking/src/entities/cuisine.entity';
 import { UrmarireEntity } from '../entities/urmarire.entity';
 import { ReactionService } from './reaction.service';
 import { ReactionEntity } from '../entities/reaction.entity';
+import { NotificationEntity } from 'apps/notifications/src/entities/notification.entity';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { ReactionEntity } from '../entities/reaction.entity';
      RecipeEntity,
      CuisineEntity,
      UrmarireEntity,
-     ReactionEntity
+     ReactionEntity,
+     NotificationEntity
     ]),
   ],
   providers: [ReactionService],

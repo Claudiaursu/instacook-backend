@@ -10,6 +10,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UrmarireEntity } from '../entities/urmarire.entity';
 import { ReactionEntity } from '../entities/reaction.entity';
+import { NotificationEntity } from 'apps/notifications/src/entities/notification.entity';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { ReactionEntity } from '../entities/reaction.entity';
      CollectionEntity,
      CommentEntity,
      UrmarireEntity,
-     ReactionEntity
+     ReactionEntity,
+     NotificationEntity
     ]),
     JwtModule.registerAsync({
       imports: [ConfigModule],

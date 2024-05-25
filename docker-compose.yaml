@@ -58,10 +58,31 @@ services:
     ports:
       - '9083:9083'
 
-  competitions:
+  # competitions:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/competitions/Dockerfile
+  #     target: development
+  #   depends_on:
+  #     - postgres
+  #   environment:
+  #     PG_HOST: postgres
+  #     PG_PORT: 5432
+  #     PG_DATABASE: instacook
+  #     PG_USER: postgres
+  #     PG_PASS: parolapostgres
+  #     JWT_SECRET: blablabla
+  #   command: npm run start:dev competitions
+  #   volumes: 
+  #     - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   ports:
+  #     - '9082:9082'
+
+  notifications:
     build:
       context: .
-      dockerfile: ./apps/competitions/Dockerfile
+      dockerfile: ./apps/notifications/Dockerfile
       target: development
     depends_on:
       - postgres
@@ -72,7 +93,7 @@ services:
       PG_USER: postgres
       PG_PASS: parolapostgres
       JWT_SECRET: blablabla
-    command: npm run start:dev competitions
+    command: npm run start:dev notifications
     volumes: 
       - .:/usr/src/app
       - /usr/src/app/node_modules

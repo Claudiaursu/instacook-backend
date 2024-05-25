@@ -9,6 +9,7 @@ import { CuisineService } from './cuisine.service';
 import { ContestModule } from 'apps/competitions/src/contest/contest.module';
 import { CompetitionEntity } from 'apps/competitions/src/entities/competition.entity';
 import { UrmarireEntity } from 'apps/user-interaction/src/entities/urmarire.entity';
+import { NotificationEntity } from 'apps/notifications/src/entities/notification.entity';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { UrmarireEntity } from 'apps/user-interaction/src/entities/urmarire.enti
      RecipeEntity,
      CuisineEntity,
      CompetitionEntity,
-     UrmarireEntity
+     UrmarireEntity,
+     NotificationEntity
     ]),
   ],
   providers: [CuisineService],

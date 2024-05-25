@@ -10,6 +10,7 @@ import { CommentEntity } from 'apps/user-interaction/src/entities/comment.entity
 import { CollectionEntity } from 'apps/cooking/src/entities/collection.entity';
 import { UserEntity } from 'apps/user-interaction/src/entities/user.entity';
 import { UrmarireEntity } from 'apps/user-interaction/src/entities/urmarire.entity';
+import { NotificationEntity } from 'apps/notifications/src/entities/notification.entity';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { UrmarireEntity } from 'apps/user-interaction/src/entities/urmarire.enti
      CommentEntity,
      CollectionEntity,
      UserEntity,
-     UrmarireEntity
+     UrmarireEntity,
+     NotificationEntity
     ]),
   ],
   providers: [ContestService],
