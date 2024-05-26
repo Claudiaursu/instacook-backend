@@ -1,15 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { TypeOrmBaseService } from '../../../../libs/common/src/database/typeorm-base.service';
 import { CommentEntity } from '../entities/comment.entity'; // Assuming you have a CommentEntity defined
 import { logger } from '@app/common/logger';
+import { RabbitmqService } from '@app/common';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class CommentService extends TypeOrmBaseService<CommentEntity> {
   constructor(
     @InjectRepository(CommentEntity)
     protected readonly commentRepo: Repository<CommentEntity>,
+    @Inject("USER_INTERACTION")
+    private readonly rabbitmqService: ClientProxy, 
   ) {
     super();
   }
@@ -53,10 +57,17 @@ export class CommentService extends TypeOrmBaseService<CommentEntity> {
 
     try {
       await this.commentRepo.insert(commentObject);
-      return commentObject;
+      console.log("vrem sa trimitem la iepuras: ", commentObject)
     } catch (error) {
       logger.throw('01J4GH5M7K38H9JVN2V1DZW4PQ', `Could not create new comment: ${JSON.stringify(error)}`, { error });
     }
+
+    try {
+      this.rabbitmqService.emit('notification__new_comment', commentObject );
+    } catch (error) {
+      console.log("Rabbit MQ error " ,error)
+    }
+    return commentObject;
   };
 
   updateComment = async (commentId: string, comment: CommentEntity): Promise<any> => {

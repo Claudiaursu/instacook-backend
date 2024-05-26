@@ -12,6 +12,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthGuard } from './utils/guards/auth.guard';
 import { FollowingModule } from './following/following.module';
 import { ReactionModule } from './reaction/reaction.module';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [  
@@ -28,7 +29,6 @@ import { ReactionModule } from './reaction/reaction.module';
         signOptions: { expiresIn: '6000s' },
       }),
     }),
-    RabbitmqModule,
     UserModule,
     CommentModule,
     CollectionModule,

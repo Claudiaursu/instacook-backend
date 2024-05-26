@@ -11,10 +11,23 @@ import { CuisineEntity } from 'apps/cooking/src/entities/cuisine.entity';
 import { UrmarireEntity } from '../entities/urmarire.entity';
 import { ReactionEntity } from '../entities/reaction.entity';
 import { NotificationEntity } from 'apps/notifications/src/entities/notification.entity';
+import { RabbitmqService } from '@app/common';
+import { ClientsModule } from '@nestjs/microservices/module';
+import { Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
     HttpModule,
+    ClientsModule.register([
+      {
+        name: 'USER_INTERACTION',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://user:password@rabbitmq:5672'],
+          queue: 'RABBIT_MQ_USER_INTERACTION_QUEUE',
+        },
+      },
+    ]),
     TypeOrmModule.forFeature([
      UserEntity,
      CollectionEntity,
@@ -26,7 +39,7 @@ import { NotificationEntity } from 'apps/notifications/src/entities/notification
      NotificationEntity
     ]),
   ],
-  providers: [CommentService],
+  providers: [CommentService, RabbitmqService],
   controllers: [CommentController],
 })
 export class CommentModule {}
