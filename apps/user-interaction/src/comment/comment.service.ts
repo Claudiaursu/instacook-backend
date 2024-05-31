@@ -57,7 +57,6 @@ export class CommentService extends TypeOrmBaseService<CommentEntity> {
 
     try {
       await this.commentRepo.insert(commentObject);
-      console.log("vrem sa trimitem la iepuras: ", commentObject)
     } catch (error) {
       logger.throw('01J4GH5M7K38H9JVN2V1DZW4PQ', `Could not create new comment: ${JSON.stringify(error)}`, { error });
     }

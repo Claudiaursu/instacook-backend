@@ -29,6 +29,21 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
     return Promise.resolve(recipes);
   };
 
+
+  getOwnerOfTheRecipe = async (recipeId: string): Promise<any> => {
+    const recipe = await this.recipeRepo
+    .createQueryBuilder('recipe')
+    .leftJoinAndSelect('recipe.colectie', 'colectie')
+    .leftJoin('colectie.utilizator', 'utilizator')
+    .addSelect(['utilizator.id'])
+    .where('recipe.id = :recipeId', { recipeId: parseInt(recipeId) })
+    .andWhere('recipe.deletedAt IS NULL')
+    .getOne();
+
+    const ownerId = recipe.colectie.utilizator.id;
+    return Promise.resolve(ownerId);
+  };
+
   getRecipesForCollection = async (colectieId: string): Promise<RecipeEntity[]> => {
     const colectieID = parseInt(colectieId);
   

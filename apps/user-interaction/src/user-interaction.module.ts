@@ -13,6 +13,7 @@ import { AuthGuard } from './utils/guards/auth.guard';
 import { FollowingModule } from './following/following.module';
 import { ReactionModule } from './reaction/reaction.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { NotificationModule } from './db-notifications/notification.module';
 
 @Module({
   imports: [  
@@ -33,7 +34,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     CommentModule,
     CollectionModule,
     FollowingModule,
-    ReactionModule
+    ReactionModule,
+    NotificationModule
   ],
   controllers: [UserInteractionController],
   providers: [

@@ -86,6 +86,7 @@ services:
       target: development
     depends_on:
       - postgres
+      - rabbitmq
     environment:
       PG_HOST: postgres
       PG_PORT: 5432
@@ -93,6 +94,8 @@ services:
       PG_USER: postgres
       PG_PASS: parolapostgres
       JWT_SECRET: blablabla
+      RABBITMQ_URL: amqp://user:password@rabbitmq:5672
+      COOKING_URL: http://cooking:3333/v1/recipes
     command: npm run start:dev notifications
     volumes: 
       - .:/usr/src/app

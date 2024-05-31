@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(CookingModule);
   
   app.enableCors({
-    origin: 'http://localhost:4200',
+    origin: '*',
   });  
   
   await app.listen(3333);

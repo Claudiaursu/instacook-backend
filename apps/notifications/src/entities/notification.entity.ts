@@ -19,6 +19,13 @@ export class NotificationEntity extends CommonEntity {
 
   @Column({ type: 'text', nullable: true })
   @ApiProperty({
+    example: 'Cutare te urmareste',
+    description: 'detalii notificare',
+  })
+  info?: string;
+
+  @Column({ type: 'text', nullable: true })
+  @ApiProperty({
     example: 'follow',
     description: 'notification category',
   })

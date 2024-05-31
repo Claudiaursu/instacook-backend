@@ -25,6 +25,9 @@ import { Transport } from '@nestjs/microservices';
         options: {
           urls: ['amqp://user:password@rabbitmq:5672'],
           queue: 'RABBIT_MQ_USER_INTERACTION_QUEUE',
+          queueOptions: {
+            durable: true,
+          },
         },
       },
     ]),

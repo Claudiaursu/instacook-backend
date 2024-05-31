@@ -6,6 +6,7 @@ import { RecipeService } from './recipe.service';
 import { RecipeEntity } from '../entities/recipe.entity';
 import { logger } from '@app/common/logger';
 import { plainToClass } from 'class-transformer';
+import { Public } from '../utils/guards/auth.guard';
 
 @ApiTags('Recipe')
 @Controller('v1/recipes')
@@ -43,6 +44,29 @@ export class RecipeController {
       
     } catch (error) {
       logger.throw("01J4GH5NR8QVJYB9F6C65V0RHHH", `Could not find all recipes for user`, { error })
+      return error;
+    }
+  }
+
+  @Get('/owner/:recipeId')
+  @Public()
+  @ApiParam({
+    name: 'recipeId',
+    type: 'string',
+    schema: {
+      example: '1',
+    },
+  })
+  @ApiOperation({ summary: 'Get owner of recipe' })
+  async findOwnerOfRecipe(@Param('recipeId') recipeId: string): Promise<any | null> {
+    try {
+      const owner = await this.recipeService.getOwnerOfTheRecipe(recipeId);
+      return {
+        ownerId: owner
+      }
+      
+    } catch (error) {
+      logger.throw("01J4GH5NR8QVJYB9F6C65V0RHHH", `Could not find owner of recipe`, { error })
       return error;
     }
   }

@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
 import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';
-import { NotificationEntity } from '../entities/notification.entity';
 import { UserEntity } from 'apps/user-interaction/src/entities/user.entity';
 import { CommentEntity } from 'apps/user-interaction/src/entities/comment.entity';
 import { UrmarireEntity } from 'apps/user-interaction/src/entities/urmarire.entity';
@@ -12,6 +11,7 @@ import { CollectionEntity } from 'apps/cooking/src/entities/collection.entity';
 import { RecipeEntity } from 'apps/cooking/src/entities/recipe.entity';
 import { CuisineEntity } from 'apps/cooking/src/entities/cuisine.entity';
 import { CompetitionEntity } from 'apps/competitions/src/entities/competition.entity';
+import { NotificationEntity } from 'apps/notifications/src/entities/notification.entity';
 
 @Module({
   imports: [

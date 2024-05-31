@@ -59,6 +59,7 @@ CREATE TABLE reteta (
     instructiuni VARCHAR(700),
     cale_poza VARCHAR(200),
     cale_video VARCHAR(200),
+    dificultate VARCHAR(10),
 	participa_concurs BOOLEAN DEFAULT FALSE,
     colectie_id INTEGER REFERENCES colectie(id),
 	bucatarie_id INTEGER REFERENCES bucatarie(id),
@@ -116,6 +117,7 @@ CREATE TABLE comentariu (
 CREATE TABLE notificare (
     id int8 NOT NULL GENERATED ALWAYS AS IDENTITY,
     text VARCHAR(200),
+    info VARCHAR(700), 
     categorie VARCHAR(20),
 	citita BOOLEAN DEFAULT FALSE,
     utilizator_id INTEGER REFERENCES utilizator(id),
@@ -128,11 +130,30 @@ CREATE TABLE notificare (
 ALTER TABLE reteta
 ALTER COLUMN ingrediente TYPE TEXT[] USING ARRAY[ingrediente];
 
-ALTER TABLE reteta
-ADD COLUMN dificultate VARCHAR(10);
+-- ALTER TABLE reteta
+-- ADD COLUMN dificultate VARCHAR(10);
 
 CREATE INDEX idx_reteta_colectie_id ON reteta (colectie_id);
 CREATE INDEX idx_colectie_utilizator_id ON colectie (utilizator_id);
 CREATE INDEX idx_colectie_publica ON colectie (publica);
 CREATE INDEX idx_notificare_id ON notificare (utilizator_id);
+
+CREATE OR REPLACE VIEW reteta_feed AS
+SELECT 
+    r.id,
+    r.titlu_reteta,
+    r.cale_poza,
+    r.dificultate,
+    COALESCE(reactii_count.nr_likes, 0) AS nr_reactii,
+    COALESCE(comentarii_count.nr_comments, 0) AS nr_comentarii
+FROM 
+    reteta r
+LEFT JOIN 
+    (SELECT reteta_id, COUNT(*) AS nr_likes FROM reactie_reteta GROUP BY reteta_id) reactii_count
+ON 
+    r.id = reactii_count.reteta_id
+LEFT JOIN 
+    (SELECT reteta_id, COUNT(*) AS nr_comments FROM comentariu GROUP BY reteta_id) comentarii_count
+ON 
+    r.id = comentarii_count.reteta_id;
 

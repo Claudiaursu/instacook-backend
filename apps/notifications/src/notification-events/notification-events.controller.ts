@@ -2,22 +2,31 @@ import { ApiBody, ApiTags, ApiParam, ApiOperation } from '@nestjs/swagger';
 import { Body, Controller, Delete, Get, Param, Patch, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { DeleteResult } from 'typeorm';
-import { NotificationService } from './notification.service';
 import { logger } from '@app/common/logger';
 import { plainToClass } from 'class-transformer';
+import { NotificationEventsService } from './notification-events.service';
+import { EventPattern, Payload } from '@nestjs/microservices';
 
-@ApiTags('Notifications')
-@Controller('v1/notifications')
-export class NotificationController {
+@ApiTags('Notification Events')
+@Controller()
+export class NotificationEventsController {
   constructor(
-    private readonly notificationService: NotificationService,
+    private readonly notificationEventsService: NotificationEventsService,
   ) { }
+
+  @EventPattern('notification__new_comment')
+  async handleCommentCreated(@Payload() data: any) {
+    console.log('Received comment_created event din controller', data);
+    return this.notificationEventsService.handleCommentCreated(data);
+  }
+
 
   // @Get('')
   // @ApiOperation({ summary: 'Get all recipes' })
-  // async findAllRecipes(): Promise<any[]> {
+  // async findAllRecipes(): Promise<RecipeEntity[]> {
   //   try {
-  //     return [];
+  //     const allRecipes = await this.recipeService.getAllRecipes();
+  //     return allRecipes;
 
   //   } catch (error) {
   //     logger.throw("01J4GH5NR8QVJYB9F6C65V0RHHH", `Could not find all recipes`, { error })
