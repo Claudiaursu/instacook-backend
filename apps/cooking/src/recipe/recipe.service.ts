@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { DeleteResult, EntityManager, Repository, getManager } from 'typeorm';
 import { TypeOrmBaseService } from '../../../../libs/common/src/database/typeorm-base.service';
 import { RecipeEntity } from '../entities/recipe.entity';
 import { logger } from '@app/common/logger';
 import { CollectionService } from '../collection/collection.service';
+import { RecipeViewEntity } from '../entities/recipe-view.entity';
 
 @Injectable()
 export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
@@ -12,6 +13,8 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
     @InjectRepository(RecipeEntity)
     protected readonly recipeRepo: Repository<RecipeEntity>,
     private readonly collectionService: CollectionService,
+    @InjectEntityManager('default')
+    private entityManager: EntityManager,
 
   ) {
     super();
@@ -184,4 +187,25 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
       logger.throw('01J4GH5P7Q38W2K9FV4J8D9Z1M', `Could not delete recipe: ${JSON.stringify(error)}`);
     }
   };
+
+  getRecipesFeedForUser = async (userId: string): Promise<RecipeViewEntity[]> => {
+    //const recipeIds = le luam din redis by userId
+    const recipeIds = ['1'];
+
+    let recipes;
+    try {
+      const entityManager = getManager();
+      // Construct the query with a parameterized IN clause
+      const query = `
+      SELECT * FROM public.reteta_feed
+      WHERE id = ANY($1)
+    `;
+      recipes = await entityManager.query(query, [recipeIds]);
+      console.log("REZULTAT ", recipes);
+    } catch (error) {
+      console.log(error);
+    }
+    return Promise.resolve(recipes);
+  };
+
 }

@@ -144,6 +144,7 @@ SELECT
     r.titlu_reteta,
     r.cale_poza,
     r.dificultate,
+    r.created_at,
     COALESCE(reactii_count.nr_likes, 0) AS nr_reactii,
     COALESCE(comentarii_count.nr_comments, 0) AS nr_comentarii
 FROM 

@@ -7,6 +7,7 @@ import { RecipeEntity } from '../entities/recipe.entity';
 import { logger } from '@app/common/logger';
 import { plainToClass } from 'class-transformer';
 import { Public } from '../utils/guards/auth.guard';
+import { RecipeViewEntity } from '../entities/recipe-view.entity';
 
 @ApiTags('Recipe')
 @Controller('v1/recipes')
@@ -212,6 +213,27 @@ export class RecipeController {
       return deleteResult;
     } catch (error) {
       logger.throw("01J4GH5T7R38W2K9FV1DZW4Q9M", `Could not delete recipe with id ${recipeId}`, { error })
+    }
+  }
+
+  @Get('/feed/:userId')
+  @ApiParam({
+    name: 'userId',
+    type: 'string',
+    schema: {
+      example: '1',
+    },
+  })
+  @ApiOperation({ summary: 'Get all recipes to be shown for a certain user' })
+  async getRecipesFeedForUser(@Param('userId') userId: string): Promise<RecipeViewEntity[] | null> {
+    try {
+      const recipes = await this.recipeService.getRecipesFeedForUser(userId);
+      return recipes;
+
+    } catch (error) {
+      console.log("ERROR< ", error)
+      logger.throw("01J4GH5P7RY8W2K9FV1DZW4Q9M", `Could not find recipes for collection ${collectionId}`)
+      return error;
     }
   }
 }

@@ -13,6 +13,7 @@ import { UrmarireEntity } from 'apps/user-interaction/src/entities/urmarire.enti
 import { CollectionService } from '../collection/collection.service';
 import { ReactionEntity } from 'apps/user-interaction/src/entities/reaction.entity';
 import { NotificationEntity } from 'apps/notifications/src/entities/notification.entity';
+import { RecipeViewEntity } from '../entities/recipe-view.entity';
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { NotificationEntity } from 'apps/notifications/src/entities/notification
      CompetitionEntity,
      UrmarireEntity,
      ReactionEntity,
-     NotificationEntity
+     NotificationEntity,
+     RecipeViewEntity
     ]),
   ],
   providers: [RecipeService, CollectionService],
