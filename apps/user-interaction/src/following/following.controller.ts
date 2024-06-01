@@ -7,6 +7,7 @@ import { CommentEntity } from '../entities/comment.entity'; // Assuming you have
 import { logger } from '@app/common/logger';
 import { plainToClass } from 'class-transformer';
 import { UrmarireEntity } from '../entities/urmarire.entity';
+import { Public } from 'apps/cooking/src/utils/guards/auth.guard';
 
 @ApiTags('Following')
 @Controller('v1/following')
@@ -15,6 +16,7 @@ export class FollowingController {
     private readonly followingService: FollowingService,
   ) { }
 
+  @Public()
   @Get('/followers/:userId')
   @ApiParam({
     name: 'userId',

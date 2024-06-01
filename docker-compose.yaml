@@ -118,7 +118,7 @@ services:
       PG_PASS: parolapostgres
       JWT_SECRET: blablabla
       RABBITMQ_URL: amqp://user:password@rabbitmq:5672
-      COOKING_URL: http://cooking:3333/v1/recipes
+      USER_INTERACTION_URL: http://user-interaction:9083/v1
     command: npm run start:dev feed
     volumes: 
       - .:/usr/src/app

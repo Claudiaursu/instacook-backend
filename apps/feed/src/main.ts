@@ -5,7 +5,6 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 dotenv.config(); 
 
-
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(FeedModule, {
     transport: Transport.RMQ,
