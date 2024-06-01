@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, EntityManager, Repository, getManager } from 'typeorm';
 import { TypeOrmBaseService } from '../../../../libs/common/src/database/typeorm-base.service';
@@ -6,6 +6,7 @@ import { RecipeEntity } from '../entities/recipe.entity';
 import { logger } from '@app/common/logger';
 import { CollectionService } from '../collection/collection.service';
 import { RecipeViewEntity } from '../entities/recipe-view.entity';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
@@ -15,6 +16,8 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
     private readonly collectionService: CollectionService,
     @InjectEntityManager('default')
     private entityManager: EntityManager,
+    @Inject("USER_INTERACTION")
+    private readonly rabbitmqService: ClientProxy, 
 
   ) {
     super();
@@ -154,10 +157,17 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
 
     try {
       await this.recipeRepo.insert(recipeObject);
-      return recipeObject;
     } catch (error) {
       logger.throw('01J4GH5M7K38H9JVN2V1DZW4PQ', `Could not create new recipe: ${JSON.stringify(error)}`, { error });
     }
+
+    try {
+      this.rabbitmqService.emit('feed__new_recipe', recipeObject );
+    } catch (error) {
+      console.log("Rabbit MQ error " ,error)
+    }
+
+    return recipeObject;
   };
 
   updateRecipe = async (recipeId: string, recipe: RecipeEntity): Promise<any> => {

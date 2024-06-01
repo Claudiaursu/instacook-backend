@@ -14,6 +14,7 @@ import { CollectionService } from '../collection/collection.service';
 import { ReactionEntity } from 'apps/user-interaction/src/entities/reaction.entity';
 import { NotificationEntity } from 'apps/notifications/src/entities/notification.entity';
 import { RecipeViewEntity } from '../entities/recipe-view.entity';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -28,6 +29,19 @@ import { RecipeViewEntity } from '../entities/recipe-view.entity';
      ReactionEntity,
      NotificationEntity,
      RecipeViewEntity
+    ]),
+    ClientsModule.register([
+      {
+        name: 'USER_INTERACTION',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://user:password@rabbitmq:5672'],
+          queue: 'RABBIT_MQ_FEED_QUEUE',
+          queueOptions: {
+            durable: true,
+          },
+        },
+      },
     ]),
   ],
   providers: [RecipeService, CollectionService],

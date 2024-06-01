@@ -232,7 +232,7 @@ export class RecipeController {
 
     } catch (error) {
       console.log("ERROR< ", error)
-      logger.throw("01J4GH5P7RY8W2K9FV1DZW4Q9M", `Could not find recipes for collection ${collectionId}`)
+      logger.throw("01J4GH5P7RY8W2K9FV1DZW4Q9M", `Could not find recipes for collection ${userId}`)
       return error;
     }
   }

@@ -103,6 +103,27 @@ services:
     ports:
       - '9082:9082'
 
+  feed:
+    build:
+      context: .
+      dockerfile: ./apps/feed/Dockerfile
+      target: development
+    depends_on:
+      - rabbitmq
+    environment:
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_DATABASE: instacook
+      PG_USER: postgres
+      PG_PASS: parolapostgres
+      JWT_SECRET: blablabla
+      RABBITMQ_URL: amqp://user:password@rabbitmq:5672
+      COOKING_URL: http://cooking:3333/v1/recipes
+    command: npm run start:dev feed
+    volumes: 
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
   rabbitmq:
     image: rabbitmq:3-management
     ports: 

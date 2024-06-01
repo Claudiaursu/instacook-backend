@@ -63,6 +63,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/notifications/tsconfig.app.json"
       }
+    },
+    "feed": {
+      "type": "application",
+      "root": "apps/feed",
+      "entryFile": "main",
+      "sourceRoot": "apps/feed/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/feed/tsconfig.app.json"
+      }
     }
   }
 }
