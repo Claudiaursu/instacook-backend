@@ -6,6 +6,8 @@ services:
       target: development
     depends_on:
       - postgres
+      - redis
+      - rabbitmq
     command: npm run start:dev cooking
     environment:
       PG_HOST: postgres
@@ -110,6 +112,7 @@ services:
       target: development
     depends_on:
       - rabbitmq
+      - redis
     environment:
       PG_HOST: postgres
       PG_PORT: 5432
@@ -132,6 +135,16 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: user
       RABBITMQ_DEFAULT_PASS: password
+
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    ports:
+      - "8001:8001"
 
   postgres:
     container_name: postgres

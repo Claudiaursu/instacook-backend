@@ -12,6 +12,11 @@ import { RecipeEntity } from 'apps/cooking/src/entities/recipe.entity';
 import { CuisineEntity } from 'apps/cooking/src/entities/cuisine.entity';
 import { CompetitionEntity } from 'apps/competitions/src/entities/competition.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { CacheModule } from '@nestjs/cache-manager';
+import type { RedisClientOptions } from 'redis';
+import * as redisStore  from 'cache-manager-redis-store';
+import { redisClientFactory } from '../utils/redis';
+import { RedisRepository } from '../utils/redis.repository';
 
 @Module({
   imports: [
@@ -29,8 +34,15 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         },
       },
     ]),
+    // CacheModule.register({
+    //   store: redisStore,
+    //   max: 1000,
+    //   ttl: 0,
+    //   host: 'localhost',
+    //   port: 6379,
+    // })
   ],
-  providers: [FeedEventsService],
+  providers: [RedisRepository, redisClientFactory, FeedEventsService],
   controllers: [FeedEventsController],
 })
 export class FeedEventsModule {}

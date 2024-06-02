@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
 import { RabbitmqModule } from '@app/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
-import * as path from 'path';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore  from 'cache-manager-redis-store';
 import { JwtModule } from '@nestjs/jwt';
 import { FeedController } from './feed.controller';
 import { FeedService } from './feed.service';
@@ -31,6 +30,13 @@ import { FeedEventsModule } from './feed-events/feed-events.module';
     RabbitmqModule.register({
       name: 'USER_INTERACTION',
     }),
+    // CacheModule.register({
+    //   store: redisStore,
+    //   max: 1000,
+    //   ttl: 0,
+    //   host: 'localhost',
+    //   port: 6379,
+    // }),
     FeedEventsModule
   ],
   controllers: [FeedController],
