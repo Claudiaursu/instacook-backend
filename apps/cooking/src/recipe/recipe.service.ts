@@ -7,6 +7,7 @@ import { logger } from '@app/common/logger';
 import { CollectionService } from '../collection/collection.service';
 import { RecipeViewEntity } from '../entities/recipe-view.entity';
 import { ClientProxy } from '@nestjs/microservices';
+import { RedisRepository } from '../utils/redis.repository';
 
 @Injectable()
 export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
@@ -14,10 +15,11 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
     @InjectRepository(RecipeEntity)
     protected readonly recipeRepo: Repository<RecipeEntity>,
     private readonly collectionService: CollectionService,
-    @InjectEntityManager('default')
+    @InjectEntityManager()
     private entityManager: EntityManager,
     @Inject("USER_INTERACTION")
     private readonly rabbitmqService: ClientProxy, 
+    private readonly redisRepository: RedisRepository
 
   ) {
     super();
@@ -199,23 +201,34 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
   };
 
   getRecipesFeedForUser = async (userId: string): Promise<RecipeViewEntity[]> => {
-    //const recipeIds = le luam din redis by userId
-    const recipeIds = ['1'];
+    //take recipesIds from redis by userId
+    let recipeIds;
+    try {
+      recipeIds = await this.redisRepository.smembers('user', userId);
+    } catch (error) {
+      console.log(error) 
+    }
+
+    console.log("recipeIds ", recipeIds)
+
+    if (!recipeIds || recipeIds.length === 0) {
+      return [];
+    }
 
     let recipes;
     try {
-      const entityManager = getManager();
-      // Construct the query with a parameterized IN clause
       const query = `
-      SELECT * FROM public.reteta_feed
-      WHERE id = ANY($1)
-    `;
-      recipes = await entityManager.query(query, [recipeIds]);
+        SELECT * FROM reteta_feed
+        WHERE id = ANY($1)
+        ORDER BY created_at DESC
+      `;
+      recipes = await this.entityManager.query(query, [recipeIds]);
       console.log("REZULTAT ", recipes);
     } catch (error) {
       console.log(error);
     }
-    return Promise.resolve(recipes);
+
+    return recipes;
   };
 
 }

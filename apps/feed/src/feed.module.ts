@@ -13,7 +13,6 @@ import { FeedEventsModule } from './feed-events/feed-events.module';
 @Module({
   imports: [
     HttpModule,
-    //DatabaseModule,
     ConfigModule.forRoot({
       isGlobal: true,
       ignoreEnvFile: true,
@@ -30,13 +29,6 @@ import { FeedEventsModule } from './feed-events/feed-events.module';
     RabbitmqModule.register({
       name: 'USER_INTERACTION',
     }),
-    // CacheModule.register({
-    //   store: redisStore,
-    //   max: 1000,
-    //   ttl: 0,
-    //   host: 'localhost',
-    //   port: 6379,
-    // }),
     FeedEventsModule
   ],
   controllers: [FeedController],

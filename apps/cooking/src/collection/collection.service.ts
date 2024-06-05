@@ -42,6 +42,23 @@ export class CollectionService extends TypeOrmBaseService<CollectionEntity> {
     return Promise.resolve(collections);
   };
 
+  getPublicCollectionsForUser = async (userId: string): Promise<CollectionEntity[]> => {
+    const userID = parseInt(userId);
+
+    const collections = await this.collectionRepo.find({
+      where: {
+        utilizator: {
+          id: userID,
+        },
+        publica: true
+      },
+      relations: [
+        'retete'
+      ]
+    });
+    return Promise.resolve(collections);
+  };
+
   getCollectionById = async (collectionId: string): Promise<CollectionEntity> => {
     try{
       const collection = await this.collectionRepo.findOne({

@@ -15,6 +15,8 @@ import { ReactionEntity } from 'apps/user-interaction/src/entities/reaction.enti
 import { NotificationEntity } from 'apps/notifications/src/entities/notification.entity';
 import { RecipeViewEntity } from '../entities/recipe-view.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { RedisRepository } from '../utils/redis.repository';
+import { redisClientFactory } from '../utils/redis';
 
 @Module({
   imports: [
@@ -44,7 +46,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       },
     ]),
   ],
-  providers: [RecipeService, CollectionService],
+  providers: [RecipeService, CollectionService, RedisRepository,  redisClientFactory],
   controllers: [RecipeController],
 })
 export class RecipeModule {}

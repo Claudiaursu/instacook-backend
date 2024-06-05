@@ -45,6 +45,20 @@ export class CollectionController {
     }
   }
 
+  @Get('/public/user/:userId')
+  @ApiOperation({ summary: 'Get all public collections for a user' })
+  async findPublicCollectionsForUser(@Param('userId') userId: string): Promise<CollectionEntity[]> {
+    try {
+      const allCollections = await this.collectionService.getPublicCollectionsForUser(userId);
+      return allCollections;
+
+    } catch (error) {
+      logger.throw("01FWXNBDFSFMM8E47DCYY010ZF", `Could not find all public collections for user`, { error })
+      return error;
+    }
+  }
+
+
   @Get('/:collectionId')
   @ApiParam({
     name: 'collectionId',
