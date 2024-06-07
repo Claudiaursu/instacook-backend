@@ -9,10 +9,12 @@ import { FeedService } from './feed.service';
 import { RecipeService } from 'apps/cooking/src/recipe/recipe.service';
 import { HttpModule } from '@nestjs/axios';
 import { FeedEventsModule } from './feed-events/feed-events.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     HttpModule,
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       ignoreEnvFile: true,

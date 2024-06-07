@@ -17,10 +17,12 @@ import type { RedisClientOptions } from 'redis';
 import * as redisStore  from 'cache-manager-redis-store';
 import { redisClientFactory } from '../utils/redis';
 import { RedisRepository } from '../utils/redis.repository';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     HttpModule,
+    ScheduleModule.forRoot(),
     ClientsModule.register([
       {
         name: 'USER_INTERACTION',

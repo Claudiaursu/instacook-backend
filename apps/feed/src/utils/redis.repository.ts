@@ -42,4 +42,12 @@ export class RedisRepository implements OnModuleDestroy {
     return this.redisClient.zrangebyscore(`${prefix}:${key}`, start, stop);
   }
 
+  async zremrangebyscore(prefix: string, key: string, start: number, stop: number): Promise<number> {
+    return this.redisClient.zremrangebyscore(`${prefix}:${key}`, start, stop);
+  }
+
+  async keys(prefix: string): Promise<string[]> {
+    return this.redisClient.keys(`${prefix}`);
+  }
+
 }

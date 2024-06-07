@@ -3,6 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { RedisRepository } from '../utils/redis.repository';
+import { Cron, CronExpression } from '@nestjs/schedule';
 //import { Cache } from 'cache-manager';
 
 
@@ -47,6 +48,23 @@ export class FeedEventsService {
       console.log(error) 
     }
   
+  }
+
+  @Cron(CronExpression.EVERY_5_HOURS)
+  async cleanupOldEntries() {
+      let cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - 3);
+
+      const keys = await this.redisRepository.keys('user:*');
+      const cleanupPromises = keys.map(key => 
+          this.redisRepository.zremrangebyscore('user', key, 0, cutoff.getTime())
+      );
+      try {
+          await Promise.all(cleanupPromises);
+          console.log('Old entries cleaned up successfully.');
+      } catch (error) {
+          console.log('Error during cleanup:', error);
+      }
   }
 
 }
