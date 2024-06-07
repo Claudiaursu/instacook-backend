@@ -16,10 +16,11 @@ export class FeedEventsService {
   }
 
   async handleRecipeFeedUpdates(event: any) {
-    console.log('Received comment_created event din service:', event);
+    console.log('Received feed__new_recipe event din service:', event);
     
     const authorId = event.colectie?.utilizator;  
     const recipeId = event.id; 
+    const recipeDate = event.createdAt; 
     const servicePath = `${process.env.USER_INTERACTION_URL}/following/followers/${authorId}`;
     
     let result;
@@ -35,7 +36,8 @@ export class FeedEventsService {
 
     let promises = [];
     for (let follower of followerIds) {
-      let prom = this.redisRepository.sadd('user', follower, recipeId);
+      //let prom = this.redisRepository.sadd('user', follower, recipeId);
+      let prom = this.redisRepository.zadd('user', follower, new Date(recipeDate).getTime(), recipeId)
       promises.push(prom);
     }
 

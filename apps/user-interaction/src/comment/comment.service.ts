@@ -62,7 +62,12 @@ export class CommentService extends TypeOrmBaseService<CommentEntity> {
     }
 
     try {
-      this.rabbitmqService.emit('notification__new_comment', commentObject );
+      this.rabbitmqService.emit('notification__new_comment', {
+        data: commentObject,
+        options: {
+          deliveryMode: 2
+        }
+      });
     } catch (error) {
       console.log("Rabbit MQ error " ,error)
     }

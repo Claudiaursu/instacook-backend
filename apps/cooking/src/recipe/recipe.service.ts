@@ -200,16 +200,20 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
     }
   };
 
-  getRecipesFeedForUser = async (userId: string): Promise<RecipeViewEntity[]> => {
+  getFollowingRecipesFeedForUser = async (userId: string): Promise<RecipeViewEntity[]> => {
     //take recipesIds from redis by userId
     let recipeIds;
     try {
-      recipeIds = await this.redisRepository.smembers('user', userId);
+      const min = new Date();
+      min.setDate(min.getDate() - 3);
+      const max = new Date();
+      console.log("min", min.getTime())
+      console.log("max", max.getTime())
+
+      recipeIds = await this.redisRepository.zrangebyscore('user', userId, min.getTime(), max.getTime());
     } catch (error) {
       console.log(error) 
     }
-
-    console.log("recipeIds ", recipeIds)
 
     if (!recipeIds || recipeIds.length === 0) {
       return [];
@@ -217,11 +221,13 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
 
     let recipes;
     try {
+
       const query = `
         SELECT * FROM reteta_feed
         WHERE id = ANY($1)
         ORDER BY created_at DESC
       `;
+
       recipes = await this.entityManager.query(query, [recipeIds]);
       console.log("REZULTAT ", recipes);
     } catch (error) {
@@ -230,5 +236,47 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
 
     return recipes;
   };
+
+  getRecipesFeedForUser = async (userId: string): Promise<RecipeViewEntity[]> => {
+    // Step 1: Fetch recipeIds from Redis
+    let recipeIds;
+    try {
+      const min = new Date();
+      min.setDate(min.getDate() - 3);
+      const max = new Date();
+      console.log("min", min.getTime())
+      console.log("max", max.getTime())
+
+      recipeIds = await this.redisRepository.zrangebyscore('user', userId, min.getTime(), max.getTime());
+    } catch (error) {
+      console.log(error) 
+    }
+
+    console.log("recipeIds ", recipeIds);
+
+    let recipes = [];
+    try {
+        // Convert recipeIds to integers
+        let recipeIds2 = recipeIds.map(id => parseInt(id, 10));
+
+        // Step 2 and 3: Query to fetch recipes by ids and recent recipes excluding those ids
+        const query = `
+            SELECT * FROM reteta_feed
+            WHERE created_at > current_date - interval '10' day
+            AND (array_length($1::bigint[], 1) IS NULL OR id != ALL($1))
+            ORDER BY created_at DESC
+            LIMIT 30
+        `;
+
+        recipes = await this.entityManager.query(query, [recipeIds2]);
+        console.log("REZULTAT ", recipes);
+    } catch (error) {
+        console.log(error);
+    }
+
+    return recipes;
+};
+
+
 
 }

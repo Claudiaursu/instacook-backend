@@ -216,6 +216,27 @@ export class RecipeController {
     }
   }
 
+  @Get('/feed/following/:userId')
+  @ApiParam({
+    name: 'userId',
+    type: 'string',
+    schema: {
+      example: '1',
+    },
+  })
+  @ApiOperation({ summary: 'Get all recipes to be shown for a certain user' })
+  async getFollowingRecipesFeedForUser(@Param('userId') userId: string): Promise<RecipeViewEntity[] | null> {
+    try {
+      const recipes = await this.recipeService.getFollowingRecipesFeedForUser(userId);
+      return recipes;
+
+    } catch (error) {
+      console.log("ERROR< ", error)
+      logger.throw("01J4GH5P7RY8W2K9FV1DZW4Q9M", `Could not find recipes for collection ${userId}`)
+      return error;
+    }
+  }
+
   @Get('/feed/:userId')
   @ApiParam({
     name: 'userId',

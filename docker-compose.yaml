@@ -144,7 +144,7 @@ services:
   redisinsight:
     image: redis/redisinsight:latest
     ports:
-      - "8001:8001"
+      - "5540:5540"
 
   postgres:
     container_name: postgres

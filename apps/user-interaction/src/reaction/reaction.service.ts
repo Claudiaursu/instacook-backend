@@ -1,16 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { TypeOrmBaseService } from '../../../../libs/common/src/database/typeorm-base.service';
 import { CommentEntity } from '../entities/comment.entity'; // Assuming you have a CommentEntity defined
 import { logger } from '@app/common/logger';
 import { ReactionEntity } from '../entities/reaction.entity';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class ReactionService extends TypeOrmBaseService<ReactionEntity> {
   constructor(
     @InjectRepository(ReactionEntity)
     protected readonly reactionRepo: Repository<ReactionEntity>,
+    @Inject("USER_INTERACTION")
+    private readonly rabbitmqService: ClientProxy, 
   ) {
     super();
   }
@@ -40,10 +43,22 @@ export class ReactionService extends TypeOrmBaseService<ReactionEntity> {
 
     try {
       await this.reactionRepo.insert(reactionObject);
-      return reactionObject;
     } catch (error) {
       logger.throw('01J4GH5M7K38H9JVN2V1DZW4PQ', `Could not create new reaction: ${JSON.stringify(error)}`, { error });
     }
+    
+    try {
+      this.rabbitmqService.emit('notification__new_like', {
+        data: reactionObject,
+        options: {
+          deliveryMode: 2
+        }
+      });
+    } catch (error) {
+      console.log("Rabbit MQ error " ,error)
+    }
+
+    return reactionObject;
   };
 
   deleteReaction = async (reaction: ReactionEntity): Promise<DeleteResult> => {

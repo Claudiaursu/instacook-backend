@@ -20,9 +20,9 @@ export class NotificationEventsService {
 
   async handleCommentCreated(event: any) {
     console.log('Received comment_created event din service:', event);
-    const commentAuthor = event.utilizator.username;
-    const recipe = event.reteta.titluReteta;
-    const recipeId = event.reteta.id;
+    const commentAuthor = event.data.utilizator.username;
+    const recipe = event.data.reteta.titluReteta;
+    const recipeId = event.data.reteta.id;
     const notificationMessage = `${commentAuthor} commented on your recipe: ${recipe}`;
     
     const servicePath = `${process.env.COOKING_URL}/owner/${recipeId}`;
@@ -31,7 +31,7 @@ export class NotificationEventsService {
 
     const newNotification = {
       text: notificationMessage,
-      info: event.text,
+      info: event.data.text,
       categorie: 'comentariu',
       citita: false,
       utilizator: {

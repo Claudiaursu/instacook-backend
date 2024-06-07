@@ -11,10 +11,24 @@ import { CuisineEntity } from 'apps/cooking/src/entities/cuisine.entity';
 import { UrmarireEntity } from '../entities/urmarire.entity';
 import { ReactionEntity } from '../entities/reaction.entity';
 import { NotificationEntity } from 'apps/notifications/src/entities/notification.entity';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
     HttpModule,
+    ClientsModule.register([
+      {
+        name: 'USER_INTERACTION',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://user:password@rabbitmq:5672'],
+          queue: 'RABBIT_MQ_USER_INTERACTION_QUEUE',
+          queueOptions: {
+            durable: true,
+          },
+        },
+      },
+    ]),
     TypeOrmModule.forFeature([
      UserEntity,
      CollectionEntity,

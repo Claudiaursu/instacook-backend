@@ -20,6 +20,18 @@ export class NotificationEventsController {
     return this.notificationEventsService.handleCommentCreated(data);
   }
 
+  @EventPattern('notification__new_like')
+  async handleNewLike(@Payload() data: any) {
+    console.log('Received notification__new_like event din controller', data);
+    //return this.notificationEventsService.handleCommentCreated(data);
+  }
+
+  @EventPattern('notification__follow')
+  async handleNewFollow(@Payload() data: any) {
+    console.log('Received notification__new_like event din controller', data);
+    //return this.notificationEventsService.handleCommentCreated(data);
+  }
+
 
   // @Get('')
   // @ApiOperation({ summary: 'Get all recipes' })

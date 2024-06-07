@@ -33,5 +33,13 @@ export class RedisRepository implements OnModuleDestroy {
   async smembers(prefix: string, key: string): Promise<string[]> {
     return this.redisClient.smembers(`${prefix}:${key}`);
   }
-  
+
+  async zadd(prefix: string, key: string, score: number, member: string): Promise<void> {
+    await this.redisClient.zadd(`${prefix}:${key}`, score, member);
+  } 
+
+  async zrangebyscore(prefix: string, key: string, start: number, stop: number): Promise<string[]> {
+    return this.redisClient.zrangebyscore(`${prefix}:${key}`, start, stop);
+  }
+
 }

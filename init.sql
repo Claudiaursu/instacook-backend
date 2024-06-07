@@ -59,7 +59,7 @@ CREATE TABLE reteta (
     instructiuni VARCHAR(700),
     cale_poza VARCHAR(200),
     cale_video VARCHAR(200),
-    dificultate VARCHAR(10),
+    dificultate VARCHAR(20),
 	participa_concurs BOOLEAN DEFAULT FALSE,
     colectie_id INTEGER REFERENCES colectie(id),
 	bucatarie_id INTEGER REFERENCES bucatarie(id),
@@ -67,6 +67,7 @@ CREATE TABLE reteta (
 	updated_at timestamptz NULL DEFAULT now(),
 	deleted_at timestamptz NULL DEFAULT null,
 	constraint reteta_pk PRIMARY KEY(id)
+    --,CONSTRAINT check_dificultate_values CHECK (dificultate IN ('easy', 'intermediate', 'hard', 'extra hard' ))
 );
 
 CREATE TABLE concurs (
@@ -82,6 +83,7 @@ CREATE TABLE concurs (
 	updated_at timestamptz NULL DEFAULT now(),
 	deleted_at timestamptz NULL DEFAULT null,
 	constraint concurs_pk PRIMARY KEY(id)
+    --,CONSTRAINT check_stadiu_values CHECK (stadiu IN ('active', 'closed'))
 );
 
 CREATE TABLE reactie_reteta (
@@ -96,6 +98,7 @@ CREATE TABLE reactie_reteta (
 	deleted_at timestamptz NULL DEFAULT null,
     constraint reactie_reteta_pk PRIMARY KEY(id),
     UNIQUE (utilizator_id, reteta_id)
+    --,CONSTRAINT check_reactie_values CHECK (reactie IN ('like', 'dislike'))
 );
 
 ALTER TABLE reactie_reteta
@@ -138,6 +141,12 @@ CREATE INDEX idx_colectie_utilizator_id ON colectie (utilizator_id);
 CREATE INDEX idx_colectie_publica ON colectie (publica);
 CREATE INDEX idx_notificare_id ON notificare (utilizator_id);
 
+CREATE INDEX idx_utilizator_id_publica ON colectie (utilizator_id, publica);
+
+CREATE INDEX idx_reteta_participa_concurs_bucatarie
+ON reteta (participa_concurs, bucatarie_id)
+WHERE participa_concurs = true;
+
 CREATE OR REPLACE VIEW reteta_feed AS
 SELECT 
     r.id,
@@ -146,7 +155,9 @@ SELECT
     r.dificultate,
     r.created_at,
     COALESCE(reactii_count.nr_likes, 0) AS nr_reactii,
-    COALESCE(comentarii_count.nr_comments, 0) AS nr_comentarii
+    COALESCE(comentarii_count.nr_comments, 0) AS nr_comentarii,
+    u.username,
+    u.poza_profil
 FROM 
     reteta r
 LEFT JOIN 
@@ -156,5 +167,12 @@ ON
 LEFT JOIN 
     (SELECT reteta_id, COUNT(*) AS nr_comments FROM comentariu GROUP BY reteta_id) comentarii_count
 ON 
-    r.id = comentarii_count.reteta_id;
-
+    r.id = comentarii_count.reteta_id
+LEFT JOIN
+    colectie c
+ON
+    r.colectie_id = c.id
+LEFT JOIN
+    utilizator u
+ON
+    c.utilizator_id = u.id;
