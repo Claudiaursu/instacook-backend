@@ -53,6 +53,31 @@ export class ReactionController {
     }
   }
 
+  @Post('/feed')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      example: {
+        content: 'This is a reaction.',
+        userId: '1',
+        recipeId: '2',
+      },
+    },
+  })
+  @ApiOperation({ summary: 'Create a new like form feed' })
+  async createReactionFromFeed(@Body() comment: ReactionEntity, @Res() res: Response) {
+    try {
+      const reactionClass = plainToClass(ReactionEntity, comment);
+      const createdObject = await this.reactionService.createReactionFromFeed(reactionClass);
+      res = res.json(createdObject);
+      return res;
+
+    } catch (error) {
+      res.status(500).send(`Could not create new reaction: ${error}`);
+      logger.throw("01J4GH5R7F38W2K9FV1DZW4Q9P", `Could not create reaction`, { error })
+    }
+  }
+
   @Post('/remove')
   @ApiBody({
     schema: {

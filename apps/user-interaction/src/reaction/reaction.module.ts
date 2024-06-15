@@ -29,6 +29,19 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         },
       },
     ]),
+    ClientsModule.register([
+      {
+        name: 'FEED',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://user:password@rabbitmq:5672'],
+          queue: 'RABBIT_MQ_FEED_QUEUE',
+          queueOptions: {
+            durable: true,
+          },
+        },
+      },
+    ]),
     TypeOrmModule.forFeature([
      UserEntity,
      CollectionEntity,

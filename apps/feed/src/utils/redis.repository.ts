@@ -30,24 +30,27 @@ export class RedisRepository implements OnModuleDestroy {
     async sadd(prefix: string, key: string, ...members: string[]): Promise<void> {
       await this.redisClient.sadd(`${prefix}:${key}`, ...members);
     }
-  async smembers(prefix: string, key: string): Promise<string[]> {
-    return this.redisClient.smembers(`${prefix}:${key}`);
-  }
+    async smembers(prefix: string, key: string): Promise<string[]> {
+      return this.redisClient.smembers(`${prefix}:${key}`);
+    }
 
-  async zadd(prefix: string, key: string, score: number, member: string): Promise<void> {
-    await this.redisClient.zadd(`${prefix}:${key}`, score, member);
-  } 
+    async zadd(prefix: string, key: string, score: number, member: string): Promise<void> {
+      await this.redisClient.zadd(`${prefix}:${key}`, score, member);
+    } 
 
-  async zrangebyscore(prefix: string, key: string, start: number, stop: number): Promise<string[]> {
-    return this.redisClient.zrangebyscore(`${prefix}:${key}`, start, stop);
-  }
+    async zrangebyscore(prefix: string, key: string, start: number, stop: number): Promise<string[]> {
+      return this.redisClient.zrangebyscore(`${prefix}:${key}`, start, stop);
+    }
 
-  async zremrangebyscore(prefix: string, key: string, start: number, stop: number): Promise<number> {
-    return this.redisClient.zremrangebyscore(`${prefix}:${key}`, start, stop);
-  }
+    async zremrangebyscore(prefix: string, key: string, start: number, stop: number): Promise<number> {
+      return this.redisClient.zremrangebyscore(`${prefix}:${key}`, start, stop);
+    }
 
-  async keys(prefix: string): Promise<string[]> {
-    return this.redisClient.keys(`${prefix}`);
-  }
+    async keys(prefix: string): Promise<string[]> {
+      return this.redisClient.keys(`${prefix}`);
+    }
 
+    async zrem(prefix: string, key: string, member: string): Promise<void> {
+      await this.redisClient.zrem(`${prefix}:${key}`, [member]);
+    }
 }

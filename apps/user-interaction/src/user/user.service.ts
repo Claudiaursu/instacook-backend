@@ -109,8 +109,8 @@ export class UserService extends TypeOrmBaseService<UserEntity> {
     
     try {
 
-      const saltOrRounds = 10;
-      const hashedPassword = await bcrypt.hash(user.parola, saltOrRounds);
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(user.parola, salt);
       user.parola = hashedPassword;
 
       const userObject = this.userRepo.create(user);

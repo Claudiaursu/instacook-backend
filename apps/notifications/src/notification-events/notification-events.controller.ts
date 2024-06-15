@@ -23,13 +23,13 @@ export class NotificationEventsController {
   @EventPattern('notification__new_like')
   async handleNewLike(@Payload() data: any) {
     console.log('Received notification__new_like event din controller', data);
-    //return this.notificationEventsService.handleCommentCreated(data);
+    return this.notificationEventsService.handleLikeCreated(data);
   }
 
   @EventPattern('notification__follow')
   async handleNewFollow(@Payload() data: any) {
-    console.log('Received notification__new_like event din controller', data);
-    //return this.notificationEventsService.handleCommentCreated(data);
+    console.log('Received notification__new_follow event din controller', data);
+    return this.notificationEventsService.handleFollowCreated(data);
   }
 
 

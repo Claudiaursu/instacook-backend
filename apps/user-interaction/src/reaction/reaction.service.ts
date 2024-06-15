@@ -14,6 +14,8 @@ export class ReactionService extends TypeOrmBaseService<ReactionEntity> {
     protected readonly reactionRepo: Repository<ReactionEntity>,
     @Inject("USER_INTERACTION")
     private readonly rabbitmqService: ClientProxy, 
+    @Inject("FEED")
+    private readonly rabbitmqFeedService: ClientProxy, 
   ) {
     super();
   }
@@ -49,6 +51,30 @@ export class ReactionService extends TypeOrmBaseService<ReactionEntity> {
     
     try {
       this.rabbitmqService.emit('notification__new_like', {
+        data: reactionObject,
+        options: {
+          deliveryMode: 2
+        }
+      });
+    } catch (error) {
+      console.log("Rabbit MQ error " ,error)
+    }
+
+    return reactionObject;
+  };
+
+
+  createReactionFromFeed = async (reaction: ReactionEntity): Promise<ReactionEntity> => {
+    const reactionObject = this.reactionRepo.create(reaction);
+
+    try {
+      await this.reactionRepo.insert(reactionObject);
+    } catch (error) {
+      logger.throw('01J4GH5M7K38H9JVN2V1DZW4PQ', `Could not create new reaction: ${JSON.stringify(error)}`, { error });
+    }
+    
+    try {
+      this.rabbitmqFeedService.emit('feed__new_recipe_like', {
         data: reactionObject,
         options: {
           deliveryMode: 2

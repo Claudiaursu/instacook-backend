@@ -18,6 +18,60 @@ export class NotificationEventsService {
   ) {
   }
 
+  async handleFollowCreated(event: any) {
+    console.log('Received like_created event din service:', event);
+    const source = event.data.urmaritor.username;
+    const destination = event.data.urmarit.id;
+    const notificationMessage = `${source} started following you`;
+
+    const newNotification = {
+      text: notificationMessage,
+      info: "",
+      categorie: 'follow',
+      citita: false,
+      utilizator: {
+        id: destination
+      }
+    }
+
+    const notificationClass = plainToClass(NotificationEntity, newNotification);
+    this.notificationService.createNotification(notificationClass);
+  }
+
+  async handleLikeCreated(event: any) {
+    console.log('Received like_created event din service:', event);
+    const likeAuthor = event.data.utilizator.username;
+    const recipe = event.data.reteta.titluReteta;
+    const recipeId = event.data.reteta.id;
+
+    if (!recipe || !likeAuthor) {
+      return;
+    }
+
+    const notificationMessage = `${likeAuthor} liked your recipe: ${recipe}`;
+    
+    const servicePath = `${process.env.COOKING_URL}/owner/${recipeId}`;
+    const result = await lastValueFrom(this.httpService.get<any>(servicePath));
+    const ownerId = result.data?.ownerId;
+
+    const newNotification = {
+      text: notificationMessage,
+      info: "",
+      categorie: 'like',
+      citita: false,
+      utilizator: {
+        id: ownerId
+      }
+    }
+
+    //we don't store& send notification for an action of the user on its own recipe 
+    if (ownerId === likeAuthor) {
+      return;
+    }
+    const notificationClass = plainToClass(NotificationEntity, newNotification);
+    this.notificationService.createNotification(notificationClass);
+  }
+
   async handleCommentCreated(event: any) {
     console.log('Received comment_created event din service:', event);
     const commentAuthor = event.data.utilizator.username;

@@ -133,6 +133,9 @@ export class CollectionService extends TypeOrmBaseService<CollectionEntity> {
       }
     });
 
+    console.log("se vrea editarea asa:", collection)
+    console.log("se vrea editarea asa:", collectionId)
+
     try {
       if (existingObject) {
         const updatedResult = await this.collectionRepo.update(parseInt(collectionId), collection);

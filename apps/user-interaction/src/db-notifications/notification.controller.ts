@@ -54,6 +54,53 @@ export class NotificationController {
     }
   }
 
+  @Get('/users/seen/:userId')
+  @ApiParam({
+    name: 'userId',
+    type: 'string',
+    schema: {
+      example: '1',
+    },
+  })
+  @ApiOperation({ summary: 'Mark as seen notifications for user' })
+  async markAsSeenNotifications(@Param('userId') userId: string): Promise<{status: number}> {
+    try {
+      await this.notificationService.markAsSeenNotificationsForUser(userId);
+      return {
+        status: 0
+      }
+      
+    } catch (error) {
+      logger.throw("01J4GH5NR8QVJYB9F6C65V0RHHH", `Could not find all notifications for user`, { error })
+      return {
+        status: 1
+      };
+    }
+  }
+
+  @Get('/count/unseen/:userId')
+  @ApiParam({
+    name: 'userId',
+    type: 'string',
+    schema: {
+      example: '1',
+    },
+  })
+  @ApiOperation({ summary: 'count unseen notifications for user' })
+  async countUnseenNotifcications(@Param('userId') userId: string): Promise<{count: number}> {
+    try {
+      const response = await this.notificationService.countUnseenNotificationsForUser(userId);
+      return response;
+      
+    } catch (error) {
+      return {
+        count: 0
+      }
+      //logger.throw("01J4GH5NR8QVJYB9F6C65V0RHHH", `Could not find all notifications for user`, { error })
+    }
+  }
+
+
   @Patch(':notificationId')
   @ApiOperation({ summary: 'Update a notification' })
   @ApiParam({

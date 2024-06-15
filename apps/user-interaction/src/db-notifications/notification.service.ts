@@ -60,6 +60,39 @@ export class NotificationService extends TypeOrmBaseService<NotificationEntity> 
     }
   };
 
+
+  markAsSeenNotificationsForUser = async (userId: string): Promise<any> => {
+    try {
+    
+      await this.notificationRepo.update(
+        { utilizator: { id: parseInt(userId) } },
+        { citita: true }
+      );
+     
+    } catch (error) {
+      logger.throw("01J4GH5N7M38K2H9FV1DZW4Q9P", `Could not find any notification`, error);
+    }
+  };
+
+  async countUnseenNotificationsForUser(userId: string): Promise<{count: number}> {
+    try {
+      const userIdInt = parseInt(userId);
+      const count = await this.notificationRepo.count({
+        where: {
+          utilizator: { id: userIdInt },
+          citita: false,
+        },
+      });
+
+      return {
+        count
+      };
+    } catch (error) {
+      console.error(`Could not count unseen notifications for user ${userId}:`, error);
+      throw new Error("Could not count unseen notifications");
+    }
+  }
+
   // deleteRecipe = async (recipeId: number): Promise<DeleteResult> => {
   //   try {
   //     const deleteResult = await this.recipeRepo.delete(recipeId);

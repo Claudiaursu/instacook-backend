@@ -50,6 +50,20 @@ export class FeedEventsService {
   
   }
 
+  //removeRecipeFromFeed
+  async removeRecipeFromFeed(event: any) {
+    console.log('Received feed__new_recipe_like event din service:', event);
+    const recipeId = event.data.reteta.id;
+    const utilizatorId = event.data.utilizator.id;
+
+    try {
+      await this.redisRepository.zrem('user', utilizatorId, recipeId)
+    } catch (error) {
+      console.log(error) 
+    }
+  
+  }
+
   @Cron(CronExpression.EVERY_5_HOURS)
   async cleanupOldEntries() {
       let cutoff = new Date();
