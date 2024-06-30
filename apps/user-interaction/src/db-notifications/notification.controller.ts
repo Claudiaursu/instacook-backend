@@ -126,13 +126,38 @@ export class NotificationController {
     }
   }
 
+  @Post('/seen')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      example: {
+        urmaritId: '1',
+        urmaritor: '2',
+      },
+    },
+  })
+  @ApiOperation({ summary: 'Mark notifications as seen' })
+  async updateNotificationsToSeen(@Body() body: {userId: string}, @Res() res: Response) {
+    try {
+      console.log("Received userId: ", body.userId); // Add logging
+      await this.notificationService.markAsSeenNotificationsForUser(body.userId); 
+      return res.json({
+        status: 0
+      });
+
+    } catch (error) {
+      logger.throw("01J4GH5R7F38W2K9FV1DZW4Q9P", `Could not mark notifications as seen`, { error });
+      return res.status(500).send(`Could not mark notifications as seen: ${error}`);
+    }
+  }
+
   // @Delete('/:recipeId')
   // @ApiOperation({ summary: 'Deletes a recipe by id' })
   // @ApiParam({
   //   name: 'recipeId',
   //   type: 'string',
   //   schema: {
-  //     default: '1',
+  //     default: '1', 
   //   },
   // })
   // async deleteRecipe(@Param('recipeId') recipeId: string): Promise<DeleteResult> {

@@ -87,7 +87,7 @@ export class UserService extends TypeOrmBaseService<UserEntity> {
   };
 
   getUserByCredentials = async (username: string, password: string): Promise<UserEntity> => {
-    try{
+    try {
       const user = await this.userRepo.findOne({
         where: {
           nume: username,
@@ -121,6 +121,27 @@ export class UserService extends TypeOrmBaseService<UserEntity> {
       //logger.throw('01FWXN3P7J082NNXV8DXMZQATV', `Could not create new topic: ${JSON.stringify(error)}`, {error});
     } 
   };
+
+  updateUser = async (userId: string, user: UserEntity): Promise<any> => {
+    const existingObject = await this.userRepo.findOne({
+      where: {
+        id: parseInt(userId)
+      }
+    });
+
+    console.log("se vrea editarea asa:", user)
+
+    try {
+      if (existingObject) {
+        const updatedResult = await this.userRepo.update(parseInt(userId), user);
+        return updatedResult;
+      }
+
+    } catch(error) {
+      console.log(error)
+      //logger.throw("01G40Q6HNBBQYGG0JCRN7N2P59", `Could not find any topic with id ${collectionId}`);
+    }
+  }
 
 //   upsertTopic = async (topic: TopicEntity): Promise<TopicEntity> => {
 //     const newObject: TopicEntity = topic;

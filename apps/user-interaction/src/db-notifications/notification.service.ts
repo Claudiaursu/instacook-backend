@@ -62,6 +62,7 @@ export class NotificationService extends TypeOrmBaseService<NotificationEntity> 
 
 
   markAsSeenNotificationsForUser = async (userId: string): Promise<any> => {
+    console.log("pentru userId: ", userId)
     try {
     
       await this.notificationRepo.update(

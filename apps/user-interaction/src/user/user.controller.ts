@@ -110,6 +110,39 @@ export class UserController {
     }
   }
 
+  @Patch(':userId')
+  @ApiOperation({ summary: 'Update an user' })
+  @ApiParam({
+    name: 'userId',
+    type: 'number',
+    schema: {
+      default: 1,
+    },
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      example: {
+        topicName: 'Puppet Basics',
+        popularityScore: 7.6,
+        topicDescription: 'The goal is to understand how puppet works.'
+      }
+    },
+  })
+  async updateUser(@Body() user: UserEntity, @Param('userId') userId: string, @Res() res: Response) {
+    try {
+      const userClass = plainToClass(UserEntity, user);
+      const createdObject = await this.userService.updateUser(userId, user);
+      res = res.json(createdObject);
+      return res;
+
+    } catch (error) {
+      console.log(error)
+      //logger.throw("01G40QBR1WV89Z4NDEERRQYED7", `Could not update collection with id ${collectionId}`, { error })
+    }
+  }
+
+
 
   // Login user by credentials
   @Post('/login')
