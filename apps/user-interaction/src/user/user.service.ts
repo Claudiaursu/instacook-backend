@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { TypeOrmBaseService } from '../../../../libs/common/src/database/typeorm-base.service';
 import { UserEntity } from '../entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class UserService extends TypeOrmBaseService<UserEntity> {
@@ -85,6 +86,31 @@ export class UserService extends TypeOrmBaseService<UserEntity> {
       //logger.throw("01FWXN2K70FQSZFHXXNAZZTRXA", `Could not find topic with id ${topicId}`, {error})
     }
   };
+
+  resetPassword = async (username: string, oldPassword: string, newPassword: string) => {
+    const existingUser = await this.getUserByUsername(username);
+    const isMatch = await bcrypt.compare(oldPassword, existingUser.parola);
+
+    console.log(isMatch);
+
+    if (!isMatch) {
+      throw new UnauthorizedException();
+    } 
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    
+    const updatedUser = {
+      parola: hashedPassword
+    }
+
+    const userClass = plainToClass(UserEntity, updatedUser);
+    const createdObject = await this.updateUser(existingUser.id.toString(), userClass);
+
+    console.log("rezultat de la update ", createdObject)
+    return createdObject;
+    //await this.updateUser(existingUser.id.toString(), updatedUser);
+  }
 
   getUserByCredentials = async (username: string, password: string): Promise<UserEntity> => {
     try {

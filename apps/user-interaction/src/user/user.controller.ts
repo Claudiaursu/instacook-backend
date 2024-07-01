@@ -170,6 +170,34 @@ export class UserController {
     }
   }
 
+    // Login user by credentials
+    @Post('/passReset')
+    @Public()
+    @ApiBody({
+      schema: {
+        type: 'object'
+      },
+    })
+    @ApiOperation({ summary: 'reset a password' })
+    async resetPassword(@Body() body: any, @Res() res: Response) {
+      try {
+        const username = body.username;
+        const oldPassword = body.oldPassword;
+        const newPassword = body.newPassword;
+        const response = await this.userService.resetPassword(username, oldPassword, newPassword);
+        
+        res = res.json(response);
+        console.log("PAROLA SCHIMBATA CU SUCCES ", res)
+        return {
+          status: 0
+        };
+
+      } catch (error) {
+        console.log("eroare din controller ", error)
+        res.status(500).send(`Could not login user: ${error}`);
+      }
+    }
+
  // Create a new user
   @Post('')
   @Public()

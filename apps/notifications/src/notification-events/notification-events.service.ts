@@ -9,6 +9,7 @@ import { NotificationService } from '../notification/notification.service';
 import { plainToClass } from 'class-transformer';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class NotificationEventsService {
@@ -99,6 +100,17 @@ export class NotificationEventsService {
     }
     const notificationClass = plainToClass(NotificationEntity, newNotification);
     this.notificationService.createNotification(notificationClass);
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async cleanupOldNotifications() {
+     
+      try {
+          //await Promise.all(cleanupPromises);
+          console.log('Old entries cleaned up successfully.');
+      } catch (error) {
+          console.log('Error during cleanup:', error);
+      }
   }
 
 
