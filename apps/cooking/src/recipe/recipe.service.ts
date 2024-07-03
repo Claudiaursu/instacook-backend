@@ -52,41 +52,69 @@ export class RecipeService extends TypeOrmBaseService<RecipeEntity> {
     return Promise.resolve(ownerId);
   };
 
+  // getRecipesForCollection = async (colectieId: string): Promise<RecipeEntity[]> => {
+  //   const colectieID = parseInt(colectieId);
+  
+  //   // const recipesWithReactionCount = await this.recipeRepo.createQueryBuilder('reteta')
+  //   //   .leftJoin('reteta.reactii', 'reactie_reteta')
+  //   //   .select(['reteta', 'COUNT(reactie_reteta.id) as reactii'])
+  //   //   .where('reteta.colectie.id = :colectieID', { colectieID })
+  //   //   .groupBy('reteta.id')
+  //   //   .getRawMany();
+
+  //   const recipesWithReactionCount = await this.recipeRepo.createQueryBuilder('reteta')
+  //   .leftJoin('reteta.reactii', 'reactie_reteta')
+  //   .leftJoin('reteta.comentarii', 'comentariu')
+  //   .select([
+  //     'reteta.id as id',
+  //     'reteta.created_at as createdAt',
+  //     'reteta.updated_at as updatedAt',
+  //     'reteta.titlu_reteta as titluReteta',
+  //     'reteta.dificultate as dificultate',
+  //     'reteta.ingrediente as ingrediente',
+  //     'reteta.instructiuni as instructiuni',
+  //     'reteta.cale_poza as calePoza',
+  //     'reteta.cale_video as caleVideo',
+  //     'reteta.participa_concurs as participaConcurs',
+  //     'reteta.deleted_at as deletedAt',
+  //     'COUNT(reactie_reteta.id) as reactii',
+  //     'COUNT(comentariu.id) as comentarii'
+  //   ])
+  //   .where('reteta.colectie.id = :colectieID', { colectieID })
+  //   .groupBy('reteta.id')
+  //   .getRawMany();
+
+  //   return Promise.resolve(recipesWithReactionCount);
+
+  // };
+
   getRecipesForCollection = async (colectieId: string): Promise<RecipeEntity[]> => {
     const colectieID = parseInt(colectieId);
-  
-    // const recipesWithReactionCount = await this.recipeRepo.createQueryBuilder('reteta')
-    //   .leftJoin('reteta.reactii', 'reactie_reteta')
-    //   .select(['reteta', 'COUNT(reactie_reteta.id) as reactii'])
-    //   .where('reteta.colectie.id = :colectieID', { colectieID })
-    //   .groupBy('reteta.id')
-    //   .getRawMany();
 
     const recipesWithReactionCount = await this.recipeRepo.createQueryBuilder('reteta')
-    .leftJoin('reteta.reactii', 'reactie_reteta')
-    .leftJoin('reteta.comentarii', 'comentariu')
-    .select([
-      'reteta.id as id',
-      'reteta.created_at as createdAt',
-      'reteta.updated_at as updatedAt',
-      'reteta.titlu_reteta as titluReteta',
-      'reteta.dificultate as dificultate',
-      'reteta.ingrediente as ingrediente',
-      'reteta.instructiuni as instructiuni',
-      'reteta.cale_poza as calePoza',
-      'reteta.cale_video as caleVideo',
-      'reteta.participa_concurs as participaConcurs',
-      'reteta.deleted_at as deletedAt',
-      'COUNT(reactie_reteta.id) as reactii',
-      'COUNT(comentariu.id) as comentarii'
-    ])
-    .where('reteta.colectie.id = :colectieID', { colectieID })
-    .groupBy('reteta.id')
-    .getRawMany();
+        .leftJoin('reteta.reactii', 'reactie_reteta')
+        .leftJoin('reteta.comentarii', 'comentariu')
+        .select([
+            'reteta.id as id',
+            'reteta.created_at as createdAt',
+            'reteta.updated_at as updatedAt',
+            'reteta.titlu_reteta as titluReteta',
+            'reteta.dificultate as dificultate',
+            'reteta.ingrediente as ingrediente',
+            'reteta.instructiuni as instructiuni',
+            'reteta.cale_poza as calePoza',
+            'reteta.cale_video as caleVideo',
+            'reteta.participa_concurs as participaConcurs',
+            'reteta.deleted_at as deletedAt',
+            '(SELECT COUNT(reactie_reteta.id) FROM reactie_reteta WHERE reactie_reteta.reteta_id = reteta.id) as reactii',
+            '(SELECT COUNT(comentariu.id) FROM comentariu WHERE comentariu.reteta_id = reteta.id) as comentarii'
+        ])
+        .where('reteta.colectie.id = :colectieID', { colectieID })
+        .groupBy('reteta.id')
+        .getRawMany();
 
     return Promise.resolve(recipesWithReactionCount);
-
-  };
+};
 
   getRecipesForUser = async (userId: string): Promise<RecipeEntity[]> => {
     const collections = await this.collectionService.getCollectionsForUser(userId);
